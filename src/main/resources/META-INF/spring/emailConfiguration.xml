@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+		http://www.springframework.org/schema/integration/mail http://www.springframework.org/schema/integration/mail/spring-integration-mail.xsd
+		http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util.xsd"
+	xmlns:int-mail="http://www.springframework.org/schema/integration/mail"
+	xmlns:util="http://www.springframework.org/schema/util">
+
+	<!-- Email inbox to watch note that the username in the store-ui is encoded
+	 and separated from the password by a single colon. Multiple emails can be
+	 added here and watched as long as they all point to the same channel. -->
+	<int-mail:imap-idle-channel-adapter
+		id="image.consumer"
+		store-uri="imaps://image.consumer.stg%40gmail.com:STGrocks@imap.gmail.com:993/inbox"
+		channel="#{T(com.stg.imageconsumer.ImageConsumerApplication).RECEIVE_MAIL}"
+		auto-startup="true" should-delete-messages="false"
+		java-mail-properties="javaImpasMailProperties" />
+
+	<util:properties id="javaImpasMailProperties">
+		<prop key="mail.imap.socketFactory.class">javax.net.ssl.SSLSocketFactory</prop>
+		<prop key="mail.imap.socketFactory.fallback">false</prop>
+		<prop key="mail.store.protocol">imaps</prop>
+		<prop key="mail.debug">false</prop>
+	</util:properties>
+
+</beans>
