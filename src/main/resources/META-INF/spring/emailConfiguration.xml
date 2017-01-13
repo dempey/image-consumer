@@ -7,9 +7,6 @@
 	xmlns:int-mail="http://www.springframework.org/schema/integration/mail"
 	xmlns:util="http://www.springframework.org/schema/util">
 
-	<!-- Email inbox to watch note that the username in the store-ui is encoded
-	 and separated from the password by a single colon. Multiple emails can be
-	 added here and watched as long as they all point to the same channel. -->
 	<int-mail:imap-idle-channel-adapter
 		id="image.consumer"
 		store-uri="imaps://image.consumer.stg%40gmail.com:STGrocks@imap.gmail.com:993/inbox"

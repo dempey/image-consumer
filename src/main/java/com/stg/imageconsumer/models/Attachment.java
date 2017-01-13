@@ -2,15 +2,44 @@ package com.stg.imageconsumer.models;
 
 import java.util.Arrays;
 
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.Table;
+import javax.persistence.Transient;
+
 import org.springframework.util.DigestUtils;
 
+@Entity
+@Table(name = "attachment")
 public class Attachment {
-
+	
+	@Id
+	@GeneratedValue(strategy = GenerationType.AUTO)
 	private Long id;
+	
+	@ManyToOne
+	@JoinColumn(name="email_id")
+	private Email email;
+	
+	@Transient
 	private byte[] data;
+	
+	@Column
 	private String md5;
+	
+	@Column
 	private String filename;
+	
+	@Column
 	private int length;
+	
+	@Column
+	private String url;
 	
 	public Attachment() {
 	}
@@ -30,6 +59,14 @@ public class Attachment {
 		this.id = id;
 	}
 	
+	public Email getEmail() {
+		return email;
+	}
+
+	public void setEmail(Email email) {
+		this.email = email;
+	}
+
 	public byte[] getData() {
 		return data;
 	}
@@ -60,6 +97,14 @@ public class Attachment {
 	
 	public void setLength(int length) {
 		this.length = length;
+	}
+
+	public String getUrl() {
+		return url;
+	}
+
+	public void setUrl(String url) {
+		this.url = url;
 	}
 
 	@Override

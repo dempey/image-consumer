@@ -78,9 +78,6 @@ public class MailToEmailEntityTransformer extends AbstractMailMessageTransformer
 				}
 			} else if(content instanceof InputStream) {
 				byte[] bytes = IOUtils.toByteArray((InputStream) content);
-//				System.out.println("filename " + bodyPart.getFileName());
-//				System.out.println("size " + bytes.length);
-//				System.out.println("hash " + DigestUtils.md5DigestAsHex(bytes));
 				email.addAttachment(new Attachment(bodyPart.getFileName(), bytes));
 			} else if(content instanceof Multipart) {
 				handleMultipart((Multipart) content, email);
