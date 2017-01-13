@@ -2,34 +2,83 @@ package com.stg.imageconsumer.models;
 
 import java.io.Serializable;
 import java.util.Date;
+import java.util.HashSet;
+import java.util.Set;
 
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.Lob;
+import javax.persistence.Table;
+import javax.persistence.Transient;
+
+import org.springframework.util.StringUtils;
+
+@Entity
+@Table(name = "email")
 public class Email implements Serializable {
 
 	private static final long serialVersionUID = 1L;
 	
-	private String bcc;
+	@Id
+	@GeneratedValue(strategy = GenerationType.AUTO)
+	private Long id;
+	
+	@Column
+	private String bccAddresses;
+	
+	@Column
+	@Lob
 	private String body;
-	private String cc;
-	private String from;
+	
+	@Column
+	private String ccAddresses;
+	
+	@Column
+	private String fromAddresses;
+	
+	@Column
 	private Date receivedDate;
+	
+	@Column
 	private Date sentDate;
+	
+	@Column
 	private String subject;
-	private String to;
+	
+	@Column
+	private String toAddresses;
+	
+	@Transient
+	private Set<Attachment> attachments;
+
+	public Email() {
+	}
+
+	public Long getId() {
+		return id;
+	}
+
+	public void setId(Long id) {
+		this.id = id;
+	}
 
 	public String getBCC() {
-		return bcc;
+		return bccAddresses;
 	}
-	
+
 	public String getBody() {
 		return body;
 	}
 
 	public String getCC() {
-		return cc;
+		return ccAddresses;
 	}
 
 	public String getFrom() {
-		return from;
+		return fromAddresses;
 	}
 
 	public Date getReceivedDate() {
@@ -45,11 +94,11 @@ public class Email implements Serializable {
 	}
 
 	public String getTo() {
-		return to;
+		return toAddresses;
 	}
 
 	public void setBCC(String bcc) {
-		this.bcc = bcc;
+		this.bccAddresses = bcc;
 	}
 
 	public void setBody(String body) {
@@ -57,11 +106,11 @@ public class Email implements Serializable {
 	}
 
 	public void setCC(String cc) {
-		this.cc = cc;
+		this.ccAddresses = cc;
 	}
 
 	public void setFrom(String from) {
-		this.from = from;
+		this.fromAddresses = from;
 	}
 
 	public void setReceivedDate(Date receivedDate) {
@@ -77,7 +126,22 @@ public class Email implements Serializable {
 	}
 
 	public void setTo(String to) {
-		this.to = to;
+		this.toAddresses = to;
+	}
+
+	public void addAttachment(Attachment attachment) {
+		if(attachments == null) {
+			attachments = new HashSet<>();
+		}
+		attachments.add(attachment);
+	}
+
+	public boolean hasBody() {
+		return !StringUtils.isEmpty(body);
+	}
+
+	public Set<Attachment> getAttachments() {
+		return attachments;
 	}
 
 }
