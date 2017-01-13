@@ -20,7 +20,7 @@ public class Integrations {
 	private static final Logger logger = LoggerFactory.getLogger(Integrations.class);
 	
 	public static final String RECEIVE_MAIL = "receiveMail";
-	private static final String SAVE_ATTACHMENTS = "saveAttachments";
+//	private static final String SAVE_ATTACHMENTS = "saveAttachments";
 	private static final String SAVE_ENTITY = "saveEntity";
 	
 	@Autowired
