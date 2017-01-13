@@ -2,7 +2,6 @@ package com.stg.imageconsumer.integrations;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.integration.annotation.MessageEndpoint;
 import org.springframework.integration.annotation.ServiceActivator;
@@ -21,25 +20,34 @@ public class Integrations {
 	
 	public static final String RECEIVE_MAIL = "receiveMail";
 //	private static final String SAVE_ATTACHMENTS = "saveAttachments";
-	private static final String SAVE_ENTITY = "saveEntity";
+	protected static final String SAVE_ENTITY = "saveEntity";
 	
-	@Autowired
+	private MailToEmailEntityTransformer mailToEmailEntityTransformer;
+	
 	private EmailRepository emailRepository;
 	
+	
+	
+	public Integrations(MailToEmailEntityTransformer mailToEmailEntityTransformer, EmailRepository emailRepository) {
+		super();
+		this.mailToEmailEntityTransformer = mailToEmailEntityTransformer;
+		this.emailRepository = emailRepository;
+	}
+
 	@Bean
 	public MessageChannel receiveMail() {
 		return MessageChannels.direct(RECEIVE_MAIL).get();
 	}
 	
 	@Bean
-	public MessageChannel transformedEntity() {
+	public MessageChannel saveEntity() {
 		return MessageChannels.direct(SAVE_ENTITY).get();
 	}
 	
 	@SuppressWarnings("unchecked")
 	@Transformer(inputChannel = RECEIVE_MAIL, outputChannel = SAVE_ENTITY)
 	public Message<Email> mailToEmailEntityTransformer(Message<MailMessage> mail) {
-		return (Message<Email>) new MailToEmailEntityTransformer().transform(mail);
+		return (Message<Email>) mailToEmailEntityTransformer.transform(mail);
 	}
 	
 	@ServiceActivator(inputChannel=SAVE_ENTITY)

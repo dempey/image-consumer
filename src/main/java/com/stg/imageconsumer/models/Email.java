@@ -1,6 +1,7 @@
 package com.stg.imageconsumer.models;
 
 import java.io.Serializable;
+import java.util.Collections;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
@@ -144,7 +145,7 @@ public class Email implements Serializable {
 	}
 
 	public Set<Attachment> getAttachments() {
-		return attachments;
+		return (attachments != null) ? attachments : Collections.emptySet();
 	}
 
 }

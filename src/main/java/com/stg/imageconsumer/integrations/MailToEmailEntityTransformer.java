@@ -17,11 +17,13 @@ import javax.mail.Part;
 import org.apache.commons.io.IOUtils;
 import org.springframework.integration.mail.transformer.AbstractMailMessageTransformer;
 import org.springframework.integration.support.AbstractIntegrationMessageBuilder;
+import org.springframework.stereotype.Component;
 import org.springframework.util.Assert;
 
 import com.stg.imageconsumer.models.Attachment;
 import com.stg.imageconsumer.models.Email;
 
+@Component
 public class MailToEmailEntityTransformer extends AbstractMailMessageTransformer<Email> {
 
 	private volatile String charset = "UTF-8";
