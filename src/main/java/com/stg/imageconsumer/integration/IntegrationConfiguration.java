@@ -4,6 +4,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.ImportResource;
+import org.springframework.integration.annotation.IntegrationComponentScan;
 import org.springframework.integration.annotation.MessageEndpoint;
 import org.springframework.integration.annotation.ServiceActivator;
 import org.springframework.integration.annotation.Transformer;
@@ -15,9 +18,11 @@ import org.springframework.messaging.MessageChannel;
 import com.stg.imageconsumer.domain.Email;
 import com.stg.imageconsumer.domain.EmailRepository;
 
-@MessageEndpoint
-public class Integrations {
-	private static final Logger logger = LoggerFactory.getLogger(Integrations.class);
+@Configuration
+@ImportResource("classpath:/META-INF/spring/emailConfiguration.xml")
+@IntegrationComponentScan
+public class IntegrationConfiguration {
+	private static final Logger logger = LoggerFactory.getLogger(IntegrationConfiguration.class);
 	
 	public static final String RECEIVE_MAIL = "receiveMail";
 //	private static final String SAVE_ATTACHMENTS = "saveAttachments";
@@ -28,7 +33,7 @@ public class Integrations {
 	private EmailRepository emailRepository;
 	
 	@Autowired
-	public Integrations(MailToEmailEntityTransformer mailToEmailEntityTransformer, EmailRepository emailRepository) {
+	public IntegrationConfiguration(MailToEmailEntityTransformer mailToEmailEntityTransformer, EmailRepository emailRepository) {
 		super();
 		this.mailToEmailEntityTransformer = mailToEmailEntityTransformer;
 		this.emailRepository = emailRepository;

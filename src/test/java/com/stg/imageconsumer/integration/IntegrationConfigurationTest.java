@@ -19,12 +19,12 @@ import org.springframework.messaging.MessageChannel;
 
 import com.stg.imageconsumer.domain.Email;
 import com.stg.imageconsumer.domain.EmailRepository;
-import com.stg.imageconsumer.integration.Integrations;
+import com.stg.imageconsumer.integration.IntegrationConfiguration;
 import com.stg.imageconsumer.integration.MailToEmailEntityTransformer;
 
-public class IntegrationsTest {
+public class IntegrationConfigurationTest {
 	
-	private Integrations integrations;
+	private IntegrationConfiguration integrations;
 	
 	private MailToEmailEntityTransformer mailToEmailEntityTransformer;
 	
@@ -41,13 +41,13 @@ public class IntegrationsTest {
 				return email;
 			}
 		});
-		integrations = new Integrations(mailToEmailEntityTransformer, emailRepository);
+		integrations = new IntegrationConfiguration(mailToEmailEntityTransformer, emailRepository);
 	}
 	
 	@Test
 	public void smokeTest() {
-		assertThat(Integrations.RECEIVE_MAIL, notNullValue());
-		assertThat(Integrations.RECEIVE_MAIL, is("receiveMail"));
+		assertThat(IntegrationConfiguration.RECEIVE_MAIL, notNullValue());
+		assertThat(IntegrationConfiguration.RECEIVE_MAIL, is("receiveMail"));
 		assertThat(integrations, notNullValue());
 	}
 
@@ -55,26 +55,26 @@ public class IntegrationsTest {
 	public void testReceiveMail() {
 		MessageChannel receiveMail = integrations.receiveMail();
 		assertThat(receiveMail, notNullValue());
-		assertThat(((AbstractMessageChannel) receiveMail).getFullChannelName(), is(Integrations.RECEIVE_MAIL));
+		assertThat(((AbstractMessageChannel) receiveMail).getFullChannelName(), is(IntegrationConfiguration.RECEIVE_MAIL));
 	}
 
 	@Test
 	public void testSaveEntity() {
 		MessageChannel transformedEntity = integrations.saveEntity();
 		assertThat(transformedEntity, notNullValue());
-		assertThat(((AbstractMessageChannel) transformedEntity).getFullChannelName(), is(Integrations.SAVE_ENTITY));
+		assertThat(((AbstractMessageChannel) transformedEntity).getFullChannelName(), is(IntegrationConfiguration.SAVE_ENTITY));
 	}
 
 	@Test
 	public void testMailToEmailEntityTransformer() throws NoSuchMethodException, SecurityException {
-		assertThat(Integrations.class.getDeclaredMethod("mailToEmailEntityTransformer", Message.class).isAnnotationPresent(Transformer.class), is(true));
+		assertThat(IntegrationConfiguration.class.getDeclaredMethod("mailToEmailEntityTransformer", Message.class).isAnnotationPresent(Transformer.class), is(true));
 		integrations.mailToEmailEntityTransformer(null);
 		verify(mailToEmailEntityTransformer).transform(any());
 	}
 
 	@Test
 	public void testHandleEmailEntity() throws NoSuchMethodException, SecurityException {
-		assertThat(Integrations.class.getDeclaredMethod("handleEmailEntity", Email.class).isAnnotationPresent(ServiceActivator.class), is(true));
+		assertThat(IntegrationConfiguration.class.getDeclaredMethod("handleEmailEntity", Email.class).isAnnotationPresent(ServiceActivator.class), is(true));
 		integrations.handleEmailEntity(new Email());
 		verify(emailRepository).save(any(Email.class));
 	}
