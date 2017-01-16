@@ -1,4 +1,4 @@
-package com.stg.imageconsumer.integrations;
+package com.stg.imageconsumer.integration;
 
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.notNullValue;
@@ -17,8 +17,10 @@ import org.springframework.integration.channel.AbstractMessageChannel;
 import org.springframework.messaging.Message;
 import org.springframework.messaging.MessageChannel;
 
-import com.stg.imageconsumer.models.Email;
-import com.stg.imageconsumer.repository.EmailRepository;
+import com.stg.imageconsumer.domain.Email;
+import com.stg.imageconsumer.domain.EmailRepository;
+import com.stg.imageconsumer.integration.Integrations;
+import com.stg.imageconsumer.integration.MailToEmailEntityTransformer;
 
 public class IntegrationsTest {
 	

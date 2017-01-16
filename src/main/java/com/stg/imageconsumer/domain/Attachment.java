@@ -1,4 +1,4 @@
-package com.stg.imageconsumer.models;
+package com.stg.imageconsumer.domain;
 
 import java.util.Arrays;
 

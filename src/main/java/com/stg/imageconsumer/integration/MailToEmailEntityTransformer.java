@@ -1,4 +1,4 @@
-package com.stg.imageconsumer.integrations;
+package com.stg.imageconsumer.integration;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -20,8 +20,8 @@ import org.springframework.integration.support.AbstractIntegrationMessageBuilder
 import org.springframework.stereotype.Component;
 import org.springframework.util.Assert;
 
-import com.stg.imageconsumer.models.Attachment;
-import com.stg.imageconsumer.models.Email;
+import com.stg.imageconsumer.domain.Attachment;
+import com.stg.imageconsumer.domain.Email;
 
 @Component
 public class MailToEmailEntityTransformer extends AbstractMailMessageTransformer<Email> {

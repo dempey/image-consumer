@@ -1,7 +1,8 @@
-package com.stg.imageconsumer.integrations;
+package com.stg.imageconsumer.integration;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.integration.annotation.MessageEndpoint;
 import org.springframework.integration.annotation.ServiceActivator;
@@ -11,8 +12,8 @@ import org.springframework.mail.MailMessage;
 import org.springframework.messaging.Message;
 import org.springframework.messaging.MessageChannel;
 
-import com.stg.imageconsumer.models.Email;
-import com.stg.imageconsumer.repository.EmailRepository;
+import com.stg.imageconsumer.domain.Email;
+import com.stg.imageconsumer.domain.EmailRepository;
 
 @MessageEndpoint
 public class Integrations {
@@ -26,8 +27,7 @@ public class Integrations {
 	
 	private EmailRepository emailRepository;
 	
-	
-	
+	@Autowired
 	public Integrations(MailToEmailEntityTransformer mailToEmailEntityTransformer, EmailRepository emailRepository) {
 		super();
 		this.mailToEmailEntityTransformer = mailToEmailEntityTransformer;

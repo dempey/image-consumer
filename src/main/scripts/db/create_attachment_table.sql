@@ -1,4 +1,4 @@
-CREATE TABLE `attachment` (
+CREATE TABLE IF NOT EXISTS `ATTACHMENT` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `email_id` int(11) DEFAULT NULL,
   `filename` varchar(45) DEFAULT NULL,
