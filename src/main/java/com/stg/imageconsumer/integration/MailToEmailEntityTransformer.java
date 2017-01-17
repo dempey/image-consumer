@@ -20,8 +20,8 @@ import org.springframework.integration.support.AbstractIntegrationMessageBuilder
 import org.springframework.stereotype.Component;
 import org.springframework.util.Assert;
 
-import com.stg.imageconsumer.domain.Attachment;
-import com.stg.imageconsumer.domain.Email;
+import com.stg.imageconsumer.domain.attachment.Attachment;
+import com.stg.imageconsumer.domain.email.Email;
 
 @Component
 public class MailToEmailEntityTransformer extends AbstractMailMessageTransformer<Email> {

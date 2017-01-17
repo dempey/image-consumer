@@ -1,4 +1,4 @@
-package com.stg.imageconsumer.domain;
+package com.stg.imageconsumer.local;
 
 import javax.sql.DataSource;
 
@@ -15,7 +15,7 @@ import org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter;
 
 @Configuration
 @EnableAutoConfiguration(excludeName = { "org.springframework.integration.mail.ImapIdleChannelAdapter" })
-@ComponentScan(basePackages = "com.stg.imageconsumer.domain")
+@ComponentScan(basePackages = { "com.stg.imageconsumer.local", "com.stg.imageconsumer.domain" })
 public class TestDatabaseConfiguration {
 
 	@Bean
@@ -37,8 +37,8 @@ public class TestDatabaseConfiguration {
 	@Bean
 	public LocalContainerEntityManagerFactoryBean entityManagerFactory(EntityManagerFactoryBuilder builder) {
 		return builder.dataSource(dataSource())
-				.packages(new String[] { "com.stg.imageconsumer.domain" })
-				.properties(com.stg.imageconsumer.domain.DatabaseConfiguration.jpaProperties())
+				.packages(new String[] { "com.stg.imageconsumer.local", "com.stg.imageconsumer.domain" })
+				.properties(com.stg.imageconsumer.local.DatabaseConfiguration.jpaProperties())
 				.build();
 	}
 

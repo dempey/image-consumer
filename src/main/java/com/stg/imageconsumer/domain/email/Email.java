@@ -1,4 +1,4 @@
-package com.stg.imageconsumer.domain;
+package com.stg.imageconsumer.domain.email;
 
 import java.io.Serializable;
 import java.util.Collections;
@@ -18,6 +18,8 @@ import javax.persistence.Table;
 
 
 import org.springframework.util.StringUtils;
+
+import com.stg.imageconsumer.domain.attachment.Attachment;
 
 @Entity
 @Table(name = "email")
@@ -146,6 +148,10 @@ public class Email implements Serializable {
 
 	public Set<Attachment> getAttachments() {
 		return (attachments != null) ? attachments : Collections.emptySet();
+	}
+
+	public void setAttachments(Set<Attachment> attachments) {
+		this.attachments = attachments;
 	}
 
 }

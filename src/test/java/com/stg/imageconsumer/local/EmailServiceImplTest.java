@@ -1,7 +1,6 @@
-package com.stg.imageconsumer.domain;
+package com.stg.imageconsumer.local;
 
-import static org.hamcrest.Matchers.is;
-import static org.hamcrest.Matchers.notNullValue;
+import static org.hamcrest.Matchers.*;
 import static org.junit.Assert.assertThat;
 
 import java.util.Date;
@@ -12,18 +11,21 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 
+import com.stg.imageconsumer.domain.attachment.Attachment;
+import com.stg.imageconsumer.domain.email.Email;
+import com.stg.imageconsumer.domain.email.EmailService;
+
 @RunWith(SpringRunner.class)
 @SpringBootTest(classes={TestDatabaseConfiguration.class})
-public class EmailRepositoryTest {
+public class EmailServiceImplTest {
 	
 	@Autowired
-	private EmailRepository emailRepository;
+	private EmailService emailService;
 
 	
 	@Test
 	public void smokeTest() {
-		assertThat(emailRepository, notNullValue());
-		assertThat(emailRepository.count(), is(0L));
+		assertThat(emailService, notNullValue());
 	}
 	
 	@Test
@@ -35,8 +37,10 @@ public class EmailRepositoryTest {
 		email.setBody("body");
 		email.setSentDate(new Date());
 		email.setReceivedDate(new Date());
-		Email save = emailRepository.save(email);
-		assertThat(save.getId(), notNullValue());
+		email.addAttachment(new Attachment("one", "one".getBytes()));
+		Email saved = emailService.save(email);
+		assertThat(saved.getId(), notNullValue());
+		saved.getAttachments().stream().forEach(a -> assertThat(a.getId(), notNullValue()));
 	}
 
 }

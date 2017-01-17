@@ -5,7 +5,9 @@ import static org.hamcrest.Matchers.notNullValue;
 import static org.junit.Assert.assertThat;
 import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -17,10 +19,10 @@ import org.springframework.integration.channel.AbstractMessageChannel;
 import org.springframework.messaging.Message;
 import org.springframework.messaging.MessageChannel;
 
-import com.stg.imageconsumer.domain.Email;
-import com.stg.imageconsumer.domain.EmailRepository;
-import com.stg.imageconsumer.integration.IntegrationConfiguration;
-import com.stg.imageconsumer.integration.MailToEmailEntityTransformer;
+import com.stg.imageconsumer.domain.attachment.Attachment;
+import com.stg.imageconsumer.domain.attachment.AttachmentService;
+import com.stg.imageconsumer.domain.email.Email;
+import com.stg.imageconsumer.domain.email.EmailService;
 
 public class IntegrationConfigurationTest {
 	
@@ -28,20 +30,23 @@ public class IntegrationConfigurationTest {
 	
 	private MailToEmailEntityTransformer mailToEmailEntityTransformer;
 	
-	private EmailRepository emailRepository;
+	private EmailService emailService;
+	
+	private AttachmentService attachmentService;
 	
 	@Before
 	public void setup() {
 		mailToEmailEntityTransformer = mock(MailToEmailEntityTransformer.class);
-		emailRepository = mock(EmailRepository.class);
-		when(emailRepository.save(any(Email.class))).thenAnswer(new Answer<Email>() {
+		emailService = mock(EmailService.class);
+		attachmentService = mock(AttachmentService.class);
+		when(emailService.save(any(Email.class))).thenAnswer(new Answer<Email>() {
 			public Email answer(InvocationOnMock invocation) {
 				Email email = invocation.getArgumentAt(0, Email.class);
 				email.setId(-1L);
 				return email;
 			}
 		});
-		integrations = new IntegrationConfiguration(mailToEmailEntityTransformer, emailRepository);
+		integrations = new IntegrationConfiguration(mailToEmailEntityTransformer, emailService, attachmentService);
 	}
 	
 	@Test
@@ -73,10 +78,20 @@ public class IntegrationConfigurationTest {
 	}
 
 	@Test
-	public void testHandleEmailEntity() throws NoSuchMethodException, SecurityException {
-		assertThat(IntegrationConfiguration.class.getDeclaredMethod("handleEmailEntity", Email.class).isAnnotationPresent(ServiceActivator.class), is(true));
-		integrations.handleEmailEntity(new Email());
-		verify(emailRepository).save(any(Email.class));
+	public void testSaveEmailInformation() throws NoSuchMethodException, SecurityException {
+		assertThat(IntegrationConfiguration.class.getDeclaredMethod("saveEmailInformation", Email.class).isAnnotationPresent(ServiceActivator.class), is(true));
+		integrations.saveEmailInformation(new Email());
+		verify(emailService).save(any(Email.class));
+	}
+	
+	@Test
+	public void testSaveAttachmentsTransformer() throws NoSuchMethodException, SecurityException {
+		assertThat(IntegrationConfiguration.class.getDeclaredMethod("saveAttachmentsTransformer", Email.class).isAnnotationPresent(Transformer.class), is(true));
+		Email fakeEmail = new Email();
+		fakeEmail.addAttachment(new Attachment("one", "123".getBytes()));
+		fakeEmail.addAttachment(new Attachment("two", "321".getBytes()));
+		integrations.saveAttachmentsTransformer(fakeEmail);
+		verify(attachmentService, times(2)).save(any(Attachment.class));
 	}
 
 }

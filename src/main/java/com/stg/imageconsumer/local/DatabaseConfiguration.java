@@ -1,4 +1,4 @@
-package com.stg.imageconsumer.domain;
+package com.stg.imageconsumer.local;
 
 import java.io.Serializable;
 import java.util.HashMap;
@@ -20,7 +20,7 @@ import org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 
 @Configuration
-@EnableJpaRepositories
+@EnableJpaRepositories(considerNestedRepositories=true)
 @EnableTransactionManagement
 public class DatabaseConfiguration {
 	@Bean
