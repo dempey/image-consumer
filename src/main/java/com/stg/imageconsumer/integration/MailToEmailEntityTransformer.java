@@ -1,4 +1,4 @@
-package com.stg.imageconsumer.integrations;
+package com.stg.imageconsumer.integration;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -17,11 +17,13 @@ import javax.mail.Part;
 import org.apache.commons.io.IOUtils;
 import org.springframework.integration.mail.transformer.AbstractMailMessageTransformer;
 import org.springframework.integration.support.AbstractIntegrationMessageBuilder;
+import org.springframework.stereotype.Component;
 import org.springframework.util.Assert;
 
-import com.stg.imageconsumer.models.Attachment;
-import com.stg.imageconsumer.models.Email;
+import com.stg.imageconsumer.domain.Attachment;
+import com.stg.imageconsumer.domain.Email;
 
+@Component
 public class MailToEmailEntityTransformer extends AbstractMailMessageTransformer<Email> {
 
 	private volatile String charset = "UTF-8";
@@ -78,9 +80,6 @@ public class MailToEmailEntityTransformer extends AbstractMailMessageTransformer
 				}
 			} else if(content instanceof InputStream) {
 				byte[] bytes = IOUtils.toByteArray((InputStream) content);
-//				System.out.println("filename " + bodyPart.getFileName());
-//				System.out.println("size " + bytes.length);
-//				System.out.println("hash " + DigestUtils.md5DigestAsHex(bytes));
 				email.addAttachment(new Attachment(bodyPart.getFileName(), bytes));
 			} else if(content instanceof Multipart) {
 				handleMultipart((Multipart) content, email);
