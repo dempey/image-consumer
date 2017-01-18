@@ -22,7 +22,7 @@ import org.springframework.util.StringUtils;
 import com.stg.imageconsumer.domain.attachment.Attachment;
 
 @Entity
-@Table(name = "email")
+@Table(name = "EMAIL")
 public class Email implements Serializable {
 
 	private static final long serialVersionUID = 1L;

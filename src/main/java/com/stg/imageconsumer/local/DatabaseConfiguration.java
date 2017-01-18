@@ -2,7 +2,6 @@ package com.stg.imageconsumer.local;
 
 import java.io.Serializable;
 import java.util.HashMap;
-import java.util.Locale;
 import java.util.Map;
 
 import javax.persistence.EntityManagerFactory;
@@ -17,6 +16,7 @@ import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.boot.orm.jpa.EntityManagerFactoryBuilder;
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
@@ -29,22 +29,24 @@ import org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 
 @Configuration
+@Profile("!prod")
 @EnableJpaRepositories(considerNestedRepositories=true)
 @EnableTransactionManagement
+@ComponentScan
 public class DatabaseConfiguration {
 	
 	protected Logger logger = LoggerFactory.getLogger(DatabaseConfiguration.class);
 	
 	@Configuration
 	@ConditionalOnClass(name="com.mysql.jdbc.Driver")
-	@Profile("!test")
+	@Profile("dev")
 	public class MySQLDatabaseConfiguration {
 		@Bean
 		public DataSource dataSource() {
 			logger.debug("MySQLDatabaseConfiguration dataSource");
 			DriverManagerDataSource dataSource = new DriverManagerDataSource();
 			dataSource.setDriverClassName("com.mysql.jdbc.Driver");
-			dataSource.setUrl("jdbc:mysql://localhost:3306/imageconsumer?useSSL=false");;
+			dataSource.setUrl("jdbc:mysql://localhost:3306/imageconsumer?useSSL=false");
 			dataSource.setUsername("root");
 			dataSource.setPassword("password");
 			return dataSource;
@@ -131,7 +133,7 @@ public class DatabaseConfiguration {
 					buf.insert(i++, '_');
 				}
 			}
-			return buf.toString().toLowerCase(Locale.ROOT);
+			return buf.toString();
 		}
 	}
 	

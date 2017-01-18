@@ -24,9 +24,9 @@ import com.stg.imageconsumer.domain.attachment.AttachmentService;
 import com.stg.imageconsumer.domain.email.Email;
 import com.stg.imageconsumer.domain.email.EmailService;
 
-public class IntegrationConfigurationTest {
+public class IntegrationsTest {
 	
-	private IntegrationConfiguration integrations;
+	private Integrations integrations;
 	
 	private MailToEmailEntityTransformer mailToEmailEntityTransformer;
 	
@@ -46,7 +46,7 @@ public class IntegrationConfigurationTest {
 				return email;
 			}
 		});
-		integrations = new IntegrationConfiguration(mailToEmailEntityTransformer, emailService, attachmentService);
+		integrations = new Integrations(mailToEmailEntityTransformer, emailService, attachmentService);
 	}
 	
 	@Test
@@ -56,37 +56,37 @@ public class IntegrationConfigurationTest {
 		assertThat(integrations, notNullValue());
 	}
 
-	@Test
-	public void testReceiveMail() {
-		MessageChannel receiveMail = integrations.receiveMail();
-		assertThat(receiveMail, notNullValue());
-		assertThat(((AbstractMessageChannel) receiveMail).getFullChannelName(), is(IntegrationConfiguration.RECEIVE_MAIL));
-	}
-
-	@Test
-	public void testSaveEntity() {
-		MessageChannel transformedEntity = integrations.saveEntity();
-		assertThat(transformedEntity, notNullValue());
-		assertThat(((AbstractMessageChannel) transformedEntity).getFullChannelName(), is(IntegrationConfiguration.SAVE_ENTITY));
-	}
+//	@Test
+//	public void testReceiveMail() {
+//		MessageChannel receiveMail = integrations.receiveMail();
+//		assertThat(receiveMail, notNullValue());
+//		assertThat(((AbstractMessageChannel) receiveMail).getFullChannelName(), is(IntegrationConfiguration.RECEIVE_MAIL));
+//	}
+//
+//	@Test
+//	public void testSaveEntity() {
+//		MessageChannel transformedEntity = integrations.saveEntity();
+//		assertThat(transformedEntity, notNullValue());
+//		assertThat(((AbstractMessageChannel) transformedEntity).getFullChannelName(), is(IntegrationConfiguration.SAVE_ENTITY));
+//	}
 
 	@Test
 	public void testMailToEmailEntityTransformer() throws NoSuchMethodException, SecurityException {
-		assertThat(IntegrationConfiguration.class.getDeclaredMethod("mailToEmailEntityTransformer", Message.class).isAnnotationPresent(Transformer.class), is(true));
+		assertThat(Integrations.class.getDeclaredMethod("mailToEmailEntityTransformer", Message.class).isAnnotationPresent(Transformer.class), is(true));
 		integrations.mailToEmailEntityTransformer(null);
 		verify(mailToEmailEntityTransformer).transform(any());
 	}
 
 	@Test
 	public void testSaveEmailInformation() throws NoSuchMethodException, SecurityException {
-		assertThat(IntegrationConfiguration.class.getDeclaredMethod("saveEmailInformation", Email.class).isAnnotationPresent(ServiceActivator.class), is(true));
+		assertThat(Integrations.class.getDeclaredMethod("saveEmailInformation", Email.class).isAnnotationPresent(ServiceActivator.class), is(true));
 		integrations.saveEmailInformation(new Email());
 		verify(emailService).save(any(Email.class));
 	}
 	
 	@Test
 	public void testSaveAttachmentsTransformer() throws NoSuchMethodException, SecurityException {
-		assertThat(IntegrationConfiguration.class.getDeclaredMethod("saveAttachmentsTransformer", Email.class).isAnnotationPresent(Transformer.class), is(true));
+		assertThat(Integrations.class.getDeclaredMethod("saveAttachmentsTransformer", Email.class).isAnnotationPresent(Transformer.class), is(true));
 		Email fakeEmail = new Email();
 		fakeEmail.addAttachment(new Attachment("one", "123".getBytes()));
 		fakeEmail.addAttachment(new Attachment("two", "321".getBytes()));

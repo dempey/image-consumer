@@ -7,8 +7,14 @@ import org.slf4j.LoggerFactory;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.ConfigurableApplicationContext;
+import org.springframework.context.annotation.Import;
 
-@SpringBootApplication
+import com.stg.imageconsumer.aws.AmazonConfiguration;
+import com.stg.imageconsumer.integration.IntegrationConfiguration;
+import com.stg.imageconsumer.local.DatabaseConfiguration;
+
+@SpringBootApplication(scanBasePackages={"com.stg.imageconsumer.domain"})
+@Import({ AmazonConfiguration.class, DatabaseConfiguration.class, IntegrationConfiguration.class })
 public class ImageConsumerApplication {
 
 	private static final Logger logger = LoggerFactory.getLogger(ImageConsumerApplication.class);
