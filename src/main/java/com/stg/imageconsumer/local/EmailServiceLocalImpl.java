@@ -19,6 +19,10 @@ public class EmailServiceLocalImpl implements EmailService {
 		return emailRepository.save(email);
 	}
 	
+	Long count() {
+		return emailRepository.count();
+	}
+	
 	@Repository
 	public interface EmailRepository extends CrudRepository<Email, Long> {
 

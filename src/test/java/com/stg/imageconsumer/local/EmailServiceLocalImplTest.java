@@ -1,6 +1,7 @@
 package com.stg.imageconsumer.local;
 
-import static org.hamcrest.Matchers.*;
+import static org.hamcrest.Matchers.is;
+import static org.hamcrest.Matchers.notNullValue;
 import static org.junit.Assert.assertThat;
 
 import java.util.Date;
@@ -11,21 +12,22 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 
+import com.stg.imageconsumer.ImageConsumerApplicationTests;
 import com.stg.imageconsumer.domain.attachment.Attachment;
 import com.stg.imageconsumer.domain.email.Email;
-import com.stg.imageconsumer.domain.email.EmailService;
 
 @RunWith(SpringRunner.class)
-@SpringBootTest(classes={TestDatabaseConfiguration.class})
-public class EmailServiceImplTest {
+@SpringBootTest(classes={ImageConsumerApplicationTests.class})
+public class EmailServiceLocalImplTest {
 	
 	@Autowired
-	private EmailService emailService;
+	private EmailServiceLocalImpl emailService;
 
 	
 	@Test
 	public void smokeTest() {
 		assertThat(emailService, notNullValue());
+		assertThat(emailService.count(), is(0L));
 	}
 	
 	@Test
