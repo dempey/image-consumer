@@ -37,7 +37,7 @@ public class TestDatabaseConfiguration {
 	@Bean
 	public LocalContainerEntityManagerFactoryBean entityManagerFactory(EntityManagerFactoryBuilder builder) {
 		return builder.dataSource(dataSource())
-				.packages(new String[] { "com.stg.imageconsumer.local", "com.stg.imageconsumer.domain" })
+				.packages("com.stg.imageconsumer.local", "com.stg.imageconsumer.domain")
 				.properties(com.stg.imageconsumer.local.DatabaseConfiguration.jpaProperties())
 				.build();
 	}

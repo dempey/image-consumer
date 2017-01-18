@@ -9,7 +9,7 @@ import com.stg.imageconsumer.domain.email.Email;
 import com.stg.imageconsumer.domain.email.EmailService;
 
 @Service
-public class EmailServiceImpl implements EmailService {
+public class EmailServiceLocalImpl implements EmailService {
 	
 	@Autowired
 	private EmailRepository emailRepository;
