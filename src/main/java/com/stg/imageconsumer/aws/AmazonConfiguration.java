@@ -22,9 +22,9 @@ import com.stg.imageconsumer.local.DatabaseConfiguration;
 @Configuration
 @Profile("prod")
 @EnableJpaRepositories(considerNestedRepositories=true)
-@EnableContextRegion(region="us-west-2")
-@EnableContextCredentials(accessKey="", secretKey="")
-@EnableContextResourceLoader
+//@EnableContextRegion(region="us-west-2")
+//@EnableContextCredentials(accessKey="AKIAI6K7HBM4NIWREROQ", secretKey="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")
+//@EnableContextResourceLoader
 @ComponentScan
 public class AmazonConfiguration {
 	
@@ -35,7 +35,7 @@ public class AmazonConfiguration {
 		logger.debug("RDS dataSource");
 		DriverManagerDataSource dataSource = new DriverManagerDataSource();
 		dataSource.setDriverClassName("com.mysql.jdbc.Driver");
-		dataSource.setUrl("jdbc:mysql://imageconsumer.cigkqle6iiyi.us-west-2.rds.amazonaws.com:3306/mydb?useSSL=false");
+		dataSource.setUrl("jdbc:mysql://imageconsumer.crj31z9rwl7x.us-west-2.rds.amazonaws.com:3306/mydb?useSSL=false");
 		dataSource.setUsername("root");
 		dataSource.setPassword("STGrocks!");
 		return dataSource;

@@ -50,7 +50,7 @@ public class Attachment {
 		this.filename = filename;
 		this.data = data;
 		this.length = data.length;
-		this.md5 = DigestUtils.md5DigestAsHex(data);
+		this.md5 = DigestUtils.md5Digest(data).toString();
 	}
 
 	public Long getId() {

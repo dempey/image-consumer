@@ -51,24 +51,24 @@ public class IntegrationsTest {
 	
 	@Test
 	public void smokeTest() {
-		assertThat(IntegrationConfiguration.RECEIVE_MAIL, notNullValue());
-		assertThat(IntegrationConfiguration.RECEIVE_MAIL, is("receiveMail"));
+		assertThat(Integrations.RECEIVE_MAIL, notNullValue());
+		assertThat(Integrations.RECEIVE_MAIL, is("receiveMail"));
 		assertThat(integrations, notNullValue());
 	}
 
-//	@Test
-//	public void testReceiveMail() {
-//		MessageChannel receiveMail = integrations.receiveMail();
-//		assertThat(receiveMail, notNullValue());
-//		assertThat(((AbstractMessageChannel) receiveMail).getFullChannelName(), is(IntegrationConfiguration.RECEIVE_MAIL));
-//	}
-//
-//	@Test
-//	public void testSaveEntity() {
-//		MessageChannel transformedEntity = integrations.saveEntity();
-//		assertThat(transformedEntity, notNullValue());
-//		assertThat(((AbstractMessageChannel) transformedEntity).getFullChannelName(), is(IntegrationConfiguration.SAVE_ENTITY));
-//	}
+	@Test
+	public void testReceiveMail() {
+		MessageChannel receiveMail = integrations.receiveMail();
+		assertThat(receiveMail, notNullValue());
+		assertThat(((AbstractMessageChannel) receiveMail).getFullChannelName(), is(Integrations.RECEIVE_MAIL));
+	}
+
+	@Test
+	public void testSaveEntity() {
+		MessageChannel transformedEntity = integrations.saveEntity();
+		assertThat(transformedEntity, notNullValue());
+		assertThat(((AbstractMessageChannel) transformedEntity).getFullChannelName(), is(Integrations.SAVE_ENTITY));
+	}
 
 	@Test
 	public void testMailToEmailEntityTransformer() throws NoSuchMethodException, SecurityException {
