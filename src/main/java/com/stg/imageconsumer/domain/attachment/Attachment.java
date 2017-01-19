@@ -1,4 +1,4 @@
-package com.stg.imageconsumer.domain;
+package com.stg.imageconsumer.domain.attachment;
 
 import java.util.Arrays;
 
@@ -14,8 +14,10 @@ import javax.persistence.Transient;
 
 import org.springframework.util.DigestUtils;
 
+import com.stg.imageconsumer.domain.email.Email;
+
 @Entity
-@Table(name = "attachment")
+@Table(name = "ATTACHMENT")
 public class Attachment {
 	
 	@Id

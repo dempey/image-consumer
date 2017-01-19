@@ -23,7 +23,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.springframework.integration.support.AbstractIntegrationMessageBuilder;
 
-import com.stg.imageconsumer.domain.Email;
+import com.stg.imageconsumer.domain.email.Email;
 import com.stg.imageconsumer.integration.MailToEmailEntityTransformer;
 
 public class MailToEmailEntityTransformerTest {
