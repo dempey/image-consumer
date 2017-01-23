@@ -1,47 +1,52 @@
 package com.stg.imageconsumer.domain.attachment;
 
+import java.io.Serializable;
 import java.util.Arrays;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import javax.persistence.Transient;
 
+import org.hibernate.annotations.GenericGenerator;
+import org.springframework.data.domain.Persistable;
 import org.springframework.util.DigestUtils;
 
 import com.stg.imageconsumer.domain.email.Email;
 
 @Entity
 @Table(name = "ATTACHMENT")
-public class Attachment {
+public class Attachment implements Persistable<String>, Serializable {
 	
+	private static final long serialVersionUID = 1L;
+
 	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private Long id;
+	@GeneratedValue(generator="system-uuid")
+	@GenericGenerator(name="system-uuid", strategy="uuid")
+	private String id;
 	
 	@ManyToOne
 	@JoinColumn(name="email_id")
 	private Email email;
 	
-	@Transient
-	private byte[] data;
+	@Column(name="md5")
+	private byte[] md5;
 	
-	@Column
-	private String md5;
-	
-	@Column
+	@Column(name="filename")
 	private String filename;
 	
-	@Column
+	@Column(name="length")
 	private int length;
 	
-	@Column
-	private String url;
+	@Column(name="s3_key")
+	private String key;
+	
+	@Transient
+	private byte[] data;
 	
 	public Attachment() {
 	}
@@ -50,14 +55,14 @@ public class Attachment {
 		this.filename = filename;
 		this.data = data;
 		this.length = data.length;
-		this.md5 = DigestUtils.md5DigestAsHex(data);
+		this.md5 = DigestUtils.md5Digest(data);
 	}
 
-	public Long getId() {
+	public String getId() {
 		return id;
 	}
 	
-	public void setId(Long id) {
+	public void setId(String id) {
 		this.id = id;
 	}
 	
@@ -77,11 +82,11 @@ public class Attachment {
 		this.data = data;
 	}
 	
-	public String getMd5() {
+	public byte[] getMd5() {
 		return md5;
 	}
 	
-	public void setMd5(String md5) {
+	public void setMd5(byte[] md5) {
 		this.md5 = md5;
 	}
 	
@@ -101,12 +106,12 @@ public class Attachment {
 		this.length = length;
 	}
 
-	public String getUrl() {
-		return url;
+	public String getKey() {
+		return key;
 	}
 
-	public void setUrl(String url) {
-		this.url = url;
+	public void setKey(String key) {
+		this.key = key;
 	}
 
 	@Override
@@ -135,6 +140,11 @@ public class Attachment {
 		} else if (!filename.equals(other.filename))
 			return false;
 		return true;
+	}
+
+	@Override
+	public boolean isNew() {
+		return this.id == null;
 	}
 	
 }

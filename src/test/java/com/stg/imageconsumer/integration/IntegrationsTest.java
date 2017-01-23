@@ -9,11 +9,16 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
+import java.util.Arrays;
+import java.util.HashSet;
+import java.util.Set;
+import java.util.UUID;
+import java.util.stream.Collectors;
+
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.invocation.InvocationOnMock;
 import org.mockito.stubbing.Answer;
-import org.springframework.integration.annotation.ServiceActivator;
 import org.springframework.integration.annotation.Transformer;
 import org.springframework.integration.channel.AbstractMessageChannel;
 import org.springframework.messaging.Message;
@@ -42,8 +47,21 @@ public class IntegrationsTest {
 		when(emailService.save(any(Email.class))).thenAnswer(new Answer<Email>() {
 			public Email answer(InvocationOnMock invocation) {
 				Email email = invocation.getArgumentAt(0, Email.class);
-				email.setId(-1L);
+				email.setId(UUID.randomUUID().toString());
+				email.setAttachments(email.getAttachments().stream()
+						.map(a -> {
+							a.setId(UUID.randomUUID().toString());
+							return a;
+						})
+						.collect(Collectors.toSet()));
 				return email;
+			}
+		});
+		when(attachmentService.saveFile(any(Attachment.class))).thenAnswer(new Answer<Attachment>() {
+			public Attachment answer(InvocationOnMock invocation) {
+				Attachment attachment = invocation.getArgumentAt(0, Attachment.class);
+				attachment.setKey(attachment.getId());
+				return attachment;
 			}
 		});
 		integrations = new Integrations(mailToEmailEntityTransformer, emailService, attachmentService);
@@ -51,24 +69,24 @@ public class IntegrationsTest {
 	
 	@Test
 	public void smokeTest() {
-		assertThat(IntegrationConfiguration.RECEIVE_MAIL, notNullValue());
-		assertThat(IntegrationConfiguration.RECEIVE_MAIL, is("receiveMail"));
+		assertThat(Integrations.RECEIVE_MAIL, notNullValue());
+		assertThat(Integrations.RECEIVE_MAIL, is("receiveMail"));
 		assertThat(integrations, notNullValue());
 	}
 
-//	@Test
-//	public void testReceiveMail() {
-//		MessageChannel receiveMail = integrations.receiveMail();
-//		assertThat(receiveMail, notNullValue());
-//		assertThat(((AbstractMessageChannel) receiveMail).getFullChannelName(), is(IntegrationConfiguration.RECEIVE_MAIL));
-//	}
-//
-//	@Test
-//	public void testSaveEntity() {
-//		MessageChannel transformedEntity = integrations.saveEntity();
-//		assertThat(transformedEntity, notNullValue());
-//		assertThat(((AbstractMessageChannel) transformedEntity).getFullChannelName(), is(IntegrationConfiguration.SAVE_ENTITY));
-//	}
+	@Test
+	public void testReceiveMail() {
+		MessageChannel receiveMail = integrations.receiveMail();
+		assertThat(receiveMail, notNullValue());
+		assertThat(((AbstractMessageChannel) receiveMail).getFullChannelName(), is(Integrations.RECEIVE_MAIL));
+	}
+
+	@Test
+	public void testSaveEntity() {
+		MessageChannel transformedEntity = integrations.saveEntity();
+		assertThat(transformedEntity, notNullValue());
+		assertThat(((AbstractMessageChannel) transformedEntity).getFullChannelName(), is(Integrations.SAVE_ENTITY));
+	}
 
 	@Test
 	public void testMailToEmailEntityTransformer() throws NoSuchMethodException, SecurityException {
@@ -79,19 +97,17 @@ public class IntegrationsTest {
 
 	@Test
 	public void testSaveEmailInformation() throws NoSuchMethodException, SecurityException {
-		assertThat(Integrations.class.getDeclaredMethod("saveEmailInformation", Email.class).isAnnotationPresent(ServiceActivator.class), is(true));
+		assertThat(Integrations.class.getDeclaredMethod("saveEmailInformation", Email.class).isAnnotationPresent(Transformer.class), is(true));
 		integrations.saveEmailInformation(new Email());
 		verify(emailService).save(any(Email.class));
 	}
 	
 	@Test
 	public void testSaveAttachmentsTransformer() throws NoSuchMethodException, SecurityException {
-		assertThat(Integrations.class.getDeclaredMethod("saveAttachmentsTransformer", Email.class).isAnnotationPresent(Transformer.class), is(true));
-		Email fakeEmail = new Email();
-		fakeEmail.addAttachment(new Attachment("one", "123".getBytes()));
-		fakeEmail.addAttachment(new Attachment("two", "321".getBytes()));
-		integrations.saveAttachmentsTransformer(fakeEmail);
-		verify(attachmentService, times(2)).save(any(Attachment.class));
+		assertThat(Integrations.class.getDeclaredMethod("saveAttachmentsTransformer", Set.class).isAnnotationPresent(Transformer.class), is(true));
+		Set<Attachment> attachments = new HashSet<>(Arrays.asList(new Attachment("one", "123".getBytes()), new Attachment("two", "321".getBytes())));
+		integrations.saveAttachmentsTransformer(attachments);
+		verify(attachmentService, times(2)).saveFile(any(Attachment.class));
 	}
 
 }

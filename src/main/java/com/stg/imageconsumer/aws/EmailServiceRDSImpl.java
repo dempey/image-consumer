@@ -28,7 +28,7 @@ public class EmailServiceRDSImpl implements EmailService {
 	}
 	
 	@Repository
-	public interface EmailRepository extends CrudRepository<Email, Long> {
+	public interface EmailRepository extends CrudRepository<Email, String> {
 
 	}
 }
