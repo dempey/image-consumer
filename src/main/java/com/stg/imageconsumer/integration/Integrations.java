@@ -24,8 +24,10 @@ import com.stg.imageconsumer.domain.email.EmailService;
 public class Integrations {
 	
 	public static final String RECEIVE_MAIL = "receiveMail";
-	public static final String SAVE_ATTACHMENTS = "saveAttachments";
 	public static final String SAVE_ENTITY = "saveEntity";
+	public static final String GET_ATTACHMENTS = "getAttachments";
+	public static final String SAVE_ATTACHMENTS = "saveAttachments";
+	public static final String UPDATE_ATTACHMENTS = "updateAttachments";
 	
 	private static final Logger logger = LoggerFactory.getLogger(Integrations.class);
 	
@@ -49,35 +51,56 @@ public class Integrations {
 	}
 	
 	@Bean
-	public MessageChannel sadeAttachments() {
-		return MessageChannels.direct(SAVE_ATTACHMENTS).get();
-	}
-	
-	@Bean
 	public MessageChannel saveEntity() {
 		return MessageChannels.direct(SAVE_ENTITY).get();
 	}
 	
-	@SuppressWarnings("unchecked")
-	@Transformer(inputChannel = RECEIVE_MAIL, outputChannel = SAVE_ATTACHMENTS)
-	public Message<Email> mailToEmailEntityTransformer(Message<MailMessage> mail) {
-		return (Message<Email>) mailToEmailEntityTransformer.transform(mail);
+	@Bean
+	public MessageChannel getAttachments() {
+		return MessageChannels.direct(GET_ATTACHMENTS).get();
 	}
 	
-	@Transformer(inputChannel = SAVE_ATTACHMENTS, outputChannel = SAVE_ENTITY)
-	public Email saveAttachmentsTransformer(Email email) {
-		logger.debug("saving attachments");
-		Set<Attachment> savedAttachments = email.getAttachments().stream().map(attachmentService::save).collect(Collectors.toSet());
-		email.setAttachments(savedAttachments);
-		logger.debug(String.format("%d attachments saved", savedAttachments.size()));
-		return email;
+	@Bean
+	public MessageChannel saveAttachments() {
+		return MessageChannels.direct(SAVE_ATTACHMENTS).get();
+	}
+	
+	@Bean
+	public MessageChannel updateAttachments() {
+		return MessageChannels.direct(UPDATE_ATTACHMENTS).get();
+	}
+	
+	@SuppressWarnings("unchecked")
+	@Transformer(inputChannel = RECEIVE_MAIL, outputChannel = SAVE_ENTITY)
+	public Message<Email> mailToEmailEntityTransformer(Message<MailMessage> mail) {
+		return (Message<Email>) mailToEmailEntityTransformer.transform(mail);
 	}	
 	
-	@ServiceActivator(inputChannel=SAVE_ENTITY)
-	public void saveEmailInformation(Email email) {
+	@Transformer(inputChannel=SAVE_ENTITY, outputChannel = GET_ATTACHMENTS)
+	public Email saveEmailInformation(Email email) {
 		logger.debug("attempting to save email");
 		Email saved = emailService.save(email);
-		logger.debug(String.format("saved email #%d", saved.getId()));
+		logger.debug(String.format("saved email %s", saved.getId()));
+		return saved;
+	}	
+	
+	@Transformer(inputChannel=GET_ATTACHMENTS, outputChannel = SAVE_ATTACHMENTS)
+	public Set<Attachment> separateAttachments(Email email) {
+		return email.getAttachments();
+	}
+	
+	@Transformer(inputChannel = SAVE_ATTACHMENTS, outputChannel = UPDATE_ATTACHMENTS)
+	public Set<Attachment> saveAttachmentsTransformer(Set<Attachment> attachments) {
+		logger.debug("saving attachments");
+		Set<Attachment> savedAttachments = attachments.stream().map(attachmentService::saveFile).collect(Collectors.toSet());
+		logger.debug("{} attachments saved", savedAttachments.size());
+		savedAttachments.forEach(a -> logger.debug("id {} key {}", a.getId(), a.getKey()));
+		return savedAttachments;
+	}
+	
+	@ServiceActivator(inputChannel = UPDATE_ATTACHMENTS)
+	public void updateAttachmentInformations(Set<Attachment> attachments) {
+		attachmentService.updateAttachments(attachments);
 	}
 
 }

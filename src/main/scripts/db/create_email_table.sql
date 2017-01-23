@@ -1,5 +1,5 @@
 CREATE TABLE IF NOT EXISTS `EMAIL` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `id` varchar(36) NOT NULL,
   `from_addresses` varchar(100) DEFAULT NULL,
   `to_addresses` varchar(100) DEFAULT NULL,
   `cc_addresses` varchar(100) DEFAULT NULL,

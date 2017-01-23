@@ -1,7 +1,11 @@
 package com.stg.imageconsumer.domain.attachment;
 
+import java.util.Collection;
+
 public interface AttachmentService {
 
-	Attachment save(Attachment attachment);
+	Attachment saveFile(Attachment attachment);
+	
+	void updateAttachments(Collection<Attachment> attachments);
 	
 }

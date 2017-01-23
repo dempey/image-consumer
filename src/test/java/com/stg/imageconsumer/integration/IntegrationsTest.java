@@ -9,6 +9,11 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
+import java.util.Arrays;
+import java.util.HashSet;
+import java.util.Set;
+import java.util.UUID;
+
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.invocation.InvocationOnMock;
@@ -42,7 +47,7 @@ public class IntegrationsTest {
 		when(emailService.save(any(Email.class))).thenAnswer(new Answer<Email>() {
 			public Email answer(InvocationOnMock invocation) {
 				Email email = invocation.getArgumentAt(0, Email.class);
-				email.setId(-1L);
+				email.setId(UUID.randomUUID().toString());
 				return email;
 			}
 		});
@@ -79,19 +84,17 @@ public class IntegrationsTest {
 
 	@Test
 	public void testSaveEmailInformation() throws NoSuchMethodException, SecurityException {
-		assertThat(Integrations.class.getDeclaredMethod("saveEmailInformation", Email.class).isAnnotationPresent(ServiceActivator.class), is(true));
+		assertThat(Integrations.class.getDeclaredMethod("saveEmailInformation", Email.class).isAnnotationPresent(Transformer.class), is(true));
 		integrations.saveEmailInformation(new Email());
 		verify(emailService).save(any(Email.class));
 	}
 	
 	@Test
 	public void testSaveAttachmentsTransformer() throws NoSuchMethodException, SecurityException {
-		assertThat(Integrations.class.getDeclaredMethod("saveAttachmentsTransformer", Email.class).isAnnotationPresent(Transformer.class), is(true));
-		Email fakeEmail = new Email();
-		fakeEmail.addAttachment(new Attachment("one", "123".getBytes()));
-		fakeEmail.addAttachment(new Attachment("two", "321".getBytes()));
-		integrations.saveAttachmentsTransformer(fakeEmail);
-		verify(attachmentService, times(2)).save(any(Attachment.class));
+		assertThat(Integrations.class.getDeclaredMethod("saveAttachmentsTransformer", Set.class).isAnnotationPresent(Transformer.class), is(true));
+		Set<Attachment> attachments = new HashSet<>(Arrays.asList(new Attachment("one", "123".getBytes()), new Attachment("two", "321".getBytes())));
+		integrations.saveAttachmentsTransformer(attachments);
+		verify(attachmentService, times(2)).saveFile(any(Attachment.class));
 	}
 
 }
