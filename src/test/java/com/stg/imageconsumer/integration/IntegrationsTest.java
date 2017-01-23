@@ -13,12 +13,12 @@ import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.invocation.InvocationOnMock;
 import org.mockito.stubbing.Answer;
-import org.springframework.integration.annotation.ServiceActivator;
 import org.springframework.integration.annotation.Transformer;
 import org.springframework.integration.channel.AbstractMessageChannel;
 import org.springframework.messaging.Message;
@@ -48,7 +48,20 @@ public class IntegrationsTest {
 			public Email answer(InvocationOnMock invocation) {
 				Email email = invocation.getArgumentAt(0, Email.class);
 				email.setId(UUID.randomUUID().toString());
+				email.setAttachments(email.getAttachments().stream()
+						.map(a -> {
+							a.setId(UUID.randomUUID().toString());
+							return a;
+						})
+						.collect(Collectors.toSet()));
 				return email;
+			}
+		});
+		when(attachmentService.saveFile(any(Attachment.class))).thenAnswer(new Answer<Attachment>() {
+			public Attachment answer(InvocationOnMock invocation) {
+				Attachment attachment = invocation.getArgumentAt(0, Attachment.class);
+				attachment.setKey(attachment.getId());
+				return attachment;
 			}
 		});
 		integrations = new Integrations(mailToEmailEntityTransformer, emailService, attachmentService);
