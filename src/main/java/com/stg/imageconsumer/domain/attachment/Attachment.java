@@ -19,7 +19,7 @@ import org.springframework.util.DigestUtils;
 import com.stg.imageconsumer.domain.email.Email;
 
 @Entity
-@Table(name = "ATTACHMENT")
+@Table(name = "attachment")
 public class Attachment implements Persistable<String>, Serializable {
 	
 	private static final long serialVersionUID = 1L;

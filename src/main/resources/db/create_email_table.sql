@@ -1,4 +1,4 @@
-CREATE TABLE IF NOT EXISTS `EMAIL` (
+CREATE TABLE IF NOT EXISTS `email` (
   `id` varchar(36) NOT NULL,
   `from_addresses` varchar(100) DEFAULT NULL,
   `to_addresses` varchar(100) DEFAULT NULL,

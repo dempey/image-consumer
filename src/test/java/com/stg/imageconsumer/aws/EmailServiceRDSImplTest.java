@@ -1,4 +1,4 @@
-package com.stg.imageconsumer.local;
+package com.stg.imageconsumer.aws;
 
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.notNullValue;
@@ -19,12 +19,11 @@ import com.stg.imageconsumer.domain.attachment.Attachment;
 import com.stg.imageconsumer.domain.email.Email;
 
 @RunWith(SpringRunner.class)
-@SpringBootTest(classes={ImageConsumerApplicationTests.class, LocalTestDatabaseConfiguration.class})
-public class EmailServiceLocalImplTest {
+@SpringBootTest(classes={ImageConsumerApplicationTests.class, TestAmazonConfiguration.class})
+public class EmailServiceRDSImplTest {
 	
 	@Autowired
-	private EmailServiceLocalImpl emailService;
-
+	private EmailServiceRDSImpl emailService;
 	
 	@Test
 	public void smokeTest() {
@@ -34,7 +33,7 @@ public class EmailServiceLocalImplTest {
 	
 	@Test
 	@DirtiesContext(classMode = ClassMode.AFTER_EACH_TEST_METHOD)
-	public void testInsert() {
+	public void testSave() {
 		Email email = new Email();
 		email.setTo("bob@bob.com");
 		email.setFrom("george@bob.com");

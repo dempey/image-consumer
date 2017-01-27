@@ -19,7 +19,7 @@ import org.springframework.test.context.junit4.SpringRunner;
 @RunWith(SpringRunner.class)
 @SpringBootTest
 @EnableAutoConfiguration(excludeName = { "org.springframework.integration.mail.ImapIdleChannelAdapter" })
-@ComponentScan(basePackages = { "com.stg.imageconsumer.local", "com.stg.imageconsumer.domain" })
+@ComponentScan(basePackages = "com.stg.imageconsumer.domain")
 public class ImageConsumerApplicationTests {
 	
 	@Autowired
