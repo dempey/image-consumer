@@ -1,5 +1,7 @@
 package com.stg.imageconsumer.aws;
 
+import static com.stg.imageconsumer.aws.AmazonConfiguration.BUCKET;
+
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.OutputStream;
@@ -27,11 +29,9 @@ public class AttachmentServiceS3Impl implements AttachmentService {
 	
 	private static final Logger logger = LoggerFactory.getLogger(AttachmentService.class);
 	
-	public static final String bucketName = "imageconsumer";
-	
 	AttachmentRepository attachmentRepository;
 	
-	ResourceLoader resourceLoader;
+	private ResourceLoader resourceLoader;
 	
 	@Autowired
 	public AttachmentServiceS3Impl(AttachmentRepository attachmentRepository, ResourceLoader resourceLoader) {
@@ -40,7 +40,7 @@ public class AttachmentServiceS3Impl implements AttachmentService {
 	}
 
 	private Resource getResource(String id) {
-		return this.resourceLoader.getResource(String.format("s3://%s/%s", bucketName, id));
+		return this.resourceLoader.getResource(String.format("s3://%s/%s", BUCKET, id));
 	}
 
 	@Override

@@ -23,6 +23,8 @@ import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 @ComponentScan
 public class AmazonConfiguration {
 	
+	public static final String BUCKET = "imageconsumer";
+	
 	@Bean
 	public RdsInstanceConfigurer rdsInstanceConfigurer() {
 		return new RdsInstanceConfigurer() {

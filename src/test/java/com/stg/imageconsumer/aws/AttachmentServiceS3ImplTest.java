@@ -1,49 +1,59 @@
 package com.stg.imageconsumer.aws;
 
-import static org.hamcrest.Matchers.*;
+import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.assertThat;
-import static org.junit.Assert.fail;
+import static org.mockito.Matchers.anyString;
+import static org.mockito.Matchers.eq;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
-import java.util.Collections;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.util.function.Supplier;
 
-import org.junit.Ignore;
+import org.apache.commons.io.IOUtils;
+import org.junit.Before;
 import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.annotation.DirtiesContext;
-import org.springframework.test.annotation.DirtiesContext.ClassMode;
-import org.springframework.test.context.junit4.SpringRunner;
+import org.springframework.core.io.ByteArrayResource;
+import org.springframework.core.io.ResourceLoader;
+import org.springframework.core.io.WritableResource;
 
-import com.stg.imageconsumer.ImageConsumerApplicationTests;
 import com.stg.imageconsumer.domain.attachment.Attachment;
+import com.stg.imageconsumer.domain.attachment.AttachmentService;
+import com.stg.imageconsumer.domain.attachment.KeyedFile;
 
-@RunWith(SpringRunner.class)
-@SpringBootTest(classes={ImageConsumerApplicationTests.class, TestAmazonConfiguration.class})
 public class AttachmentServiceS3ImplTest {
+	
+	private AttachmentServiceS3Impl.AttachmentRepository attachmentRepository;
+	
+	private ResourceLoader resourceLoader;
+	
+	private AttachmentService attachmentService;
+	
+	@Before
+	public void setup() {
+		attachmentRepository = mock(AttachmentServiceS3Impl.AttachmentRepository.class);
+		resourceLoader = mock(ResourceLoader.class);
+		attachmentService = new AttachmentServiceS3Impl(attachmentRepository, resourceLoader);
+	}
 
-	@Autowired
-	public AttachmentServiceS3Impl attachmentService;
-	
 	@Test
-	public void smokeTest() {
-		assertThat(attachmentService, notNullValue());
-		assertThat(attachmentService.attachmentRepository.count(), is(0L));
+	public void testGetFile() throws IOException {
+		when(resourceLoader.getResource(anyString())).thenReturn(new ByteArrayResource("hello there".getBytes()));
+		KeyedFile one = attachmentService.getFile("one");
+		assertThat(IOUtils.toByteArray(one.getInputStream()), is("hello there".getBytes()));
+		verify(resourceLoader).getResource(eq("s3://imageconsumer/one"));
 	}
-	
-	@Ignore
+
 	@Test
-	public void testSaveFile() {
-		fail("not written yet");
-	}
-	
-	@Test
-	@DirtiesContext(classMode = ClassMode.AFTER_EACH_TEST_METHOD)
-	public void testUpdateAttachments() {
-		Attachment saved = attachmentService.attachmentRepository.save(new Attachment("one", "one".getBytes()));
-		saved.setKey("two");
-		attachmentService.updateAttachments(Collections.singleton(saved));
-		Attachment updated = attachmentService.attachmentRepository.findOne(saved.getId());
-		assertThat(updated.getKey(), is("two"));
+	public void testSaveAndGetKey() throws IOException {
+		WritableResource resource = mock(WritableResource.class);
+		when(resource.getOutputStream()).thenReturn(new ByteArrayOutputStream());
+		when(resourceLoader.getResource(anyString())).thenReturn(resource);
+		Attachment attachment = new Attachment("one", "one".getBytes());
+		attachment.setId("id");
+		Supplier<? extends String> sup = attachmentService.saveAndGetKey(attachment);
+		assertThat(sup.get(), is("id"));
 	}
 }
