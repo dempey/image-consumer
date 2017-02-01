@@ -43,7 +43,7 @@ public class AttachmentServiceS3ImplTest {
 		when(resourceLoader.getResource(anyString())).thenReturn(new ByteArrayResource("hello there".getBytes()));
 		KeyedFile one = attachmentService.getFile("one");
 		assertThat(IOUtils.toByteArray(one.getInputStream()), is("hello there".getBytes()));
-		verify(resourceLoader).getResource(eq("s3://imageconsumer/one"));
+		verify(resourceLoader).getResource(eq("s3://" + AmazonConfiguration.BUCKET + "/one"));
 	}
 
 	@Test
