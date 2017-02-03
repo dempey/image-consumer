@@ -1,4 +1,4 @@
-package com.stg.imageconsumer.domain;
+package com.stg.imageconsumer.domain.email;
 
 import java.io.Serializable;
 import java.util.Collections;
@@ -10,48 +10,51 @@ import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Lob;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
-
+import org.hibernate.annotations.GenericGenerator;
+import org.springframework.data.domain.Persistable;
 import org.springframework.util.StringUtils;
+
+import com.stg.imageconsumer.domain.attachment.Attachment;
 
 @Entity
 @Table(name = "email")
-public class Email implements Serializable {
+public class Email implements Persistable<String>, Serializable {
 
 	private static final long serialVersionUID = 1L;
 	
 	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private Long id;
+	@GeneratedValue(generator="system-uuid")
+	@GenericGenerator(name="system-uuid", strategy="uuid")
+	private String id;
 	
-	@Column
+	@Column(name="bcc_addresses")
 	private String bccAddresses;
 	
-	@Column
+	@Column(name="body")
 	@Lob
 	private String body;
 	
-	@Column
+	@Column(name="cc_addresses")
 	private String ccAddresses;
 	
-	@Column
+	@Column(name="from_addresses")
 	private String fromAddresses;
 	
-	@Column
+	@Column(name="received_date")
 	private Date receivedDate;
 	
-	@Column
+	@Column(name="sent_date")
 	private Date sentDate;
 	
-	@Column
+	@Column(name="subject")
 	private String subject;
 	
-	@Column
+	@Column(name="to_addresses")
 	private String toAddresses;
 	
 	@OneToMany(mappedBy="email", cascade={CascadeType.ALL})
@@ -60,12 +63,18 @@ public class Email implements Serializable {
 	public Email() {
 	}
 
-	public Long getId() {
+	@Override
+	public String getId() {
 		return id;
 	}
-
-	public void setId(Long id) {
+	
+	public void setId(String id) {
 		this.id = id;
+	}
+
+	@Override
+	public boolean isNew() {
+		return this.id == null;
 	}
 
 	public String getBCC() {
@@ -146,6 +155,10 @@ public class Email implements Serializable {
 
 	public Set<Attachment> getAttachments() {
 		return (attachments != null) ? attachments : Collections.emptySet();
+	}
+
+	public void setAttachments(Set<Attachment> attachments) {
+		this.attachments = attachments;
 	}
 
 }
