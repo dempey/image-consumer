@@ -16,6 +16,8 @@ import org.hibernate.annotations.GenericGenerator;
 import org.springframework.data.domain.Persistable;
 import org.springframework.util.DigestUtils;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.stg.imageconsumer.domain.email.Email;
 
 @Entity
@@ -31,6 +33,7 @@ public class Attachment implements Persistable<String>, Serializable {
 	
 	@ManyToOne
 	@JoinColumn(name="email_id")
+	@JsonBackReference
 	private Email email;
 	
 	@Column(name="md5")
@@ -46,7 +49,11 @@ public class Attachment implements Persistable<String>, Serializable {
 	private String key;
 	
 	@Transient
+	@JsonIgnore
 	private byte[] data;
+	
+	@Transient
+	private String src;
 	
 	public Attachment() {
 	}
@@ -112,6 +119,14 @@ public class Attachment implements Persistable<String>, Serializable {
 
 	public void setKey(String key) {
 		this.key = key;
+	}
+
+	public String getSrc() {
+		return src;
+	}
+
+	public void setSrc(String src) {
+		this.src = src;
 	}
 
 	@Override
