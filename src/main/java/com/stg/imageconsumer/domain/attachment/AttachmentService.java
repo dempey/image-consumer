@@ -13,5 +13,7 @@ public interface AttachmentService {
 	Supplier<? extends String> saveAndGetKey(Attachment attachment);
 
 	Stream<Attachment> findSimilarAttachments(Attachment attachment);
+
+	String getUrlFor(String key);
 	
 }

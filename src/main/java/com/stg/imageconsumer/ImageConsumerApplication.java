@@ -11,11 +11,12 @@ import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.context.annotation.Import;
 
 import com.stg.imageconsumer.aws.AmazonConfiguration;
+import com.stg.imageconsumer.controller.WebConfiguration;
 import com.stg.imageconsumer.integration.IntegrationConfiguration;
 import com.stg.imageconsumer.local.DatabaseConfiguration;
 
 @SpringBootApplication(scanBasePackages={"com.stg.imageconsumer.domain"}, exclude = ContextStackAutoConfiguration.class)
-@Import({ AmazonConfiguration.class, DatabaseConfiguration.class, IntegrationConfiguration.class })
+@Import({ AmazonConfiguration.class, DatabaseConfiguration.class, IntegrationConfiguration.class, WebConfiguration.class })
 public class ImageConsumerApplication {
 
 	private static final Logger logger = LoggerFactory.getLogger(ImageConsumerApplication.class);

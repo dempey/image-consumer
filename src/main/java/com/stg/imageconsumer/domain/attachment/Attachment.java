@@ -53,7 +53,7 @@ public class Attachment implements Persistable<String>, Serializable {
 	private byte[] data;
 	
 	@Transient
-	private String src;
+	private String url;
 	
 	public Attachment() {
 	}
@@ -121,12 +121,12 @@ public class Attachment implements Persistable<String>, Serializable {
 		this.key = key;
 	}
 
-	public String getSrc() {
-		return src;
+	public String getUrl() {
+		return url;
 	}
 
-	public void setSrc(String src) {
-		this.src = src;
+	public void setUrl(String url) {
+		this.url = url;
 	}
 
 	@Override

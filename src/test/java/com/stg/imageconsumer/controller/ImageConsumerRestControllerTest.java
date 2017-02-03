@@ -1,11 +1,12 @@
 package com.stg.imageconsumer.controller;
 
-import static org.mockito.Mockito.*;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 import static org.hamcrest.Matchers.is;
+import static org.mockito.Matchers.eq;
+import static org.mockito.Mockito.when;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-import java.io.ByteArrayInputStream;
 import java.util.Collections;
 
 import org.junit.Test;
@@ -19,14 +20,13 @@ import org.springframework.test.web.servlet.MockMvc;
 
 import com.stg.imageconsumer.domain.attachment.Attachment;
 import com.stg.imageconsumer.domain.attachment.AttachmentService;
-import com.stg.imageconsumer.domain.attachment.KeyedFile;
 import com.stg.imageconsumer.domain.email.Email;
 import com.stg.imageconsumer.domain.email.EmailService;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest(classes={WebConfiguration.class})
 @AutoConfigureMockMvc
-public class EmailRestControllerTest {
+public class ImageConsumerRestControllerTest {
 	
 	@Autowired
 	private MockMvc mockMvc;
@@ -45,15 +45,17 @@ public class EmailRestControllerTest {
     	email.setSubject("hello there");
     	email.setBody("I have a body");
     	Attachment attachment = new Attachment("one.png", "one".getBytes());
-    	attachment.setKey("key");
+    	attachment.setKey("keyone");
 		email.addAttachment(attachment);
     	when(emailService.getAll()).thenReturn(Collections.singletonList(email));
-    	when(attachmentService.getFile(eq("key"))).thenReturn(new KeyedFile("key", new ByteArrayInputStream("one".getBytes())));
-        mockMvc.perform(get("/emails"))
+    	when(attachmentService.getUrlFor(eq("keyone"))).thenReturn("https://s3-us-west-2.amazonaws.com/imageconsumer/keyone");
+        mockMvc.perform(get("/email"))
 	        .andExpect(status().isOk())
 	        .andExpect(jsonPath("$[0].subject", is("hello there")))
-	        .andExpect(jsonPath("$[0].attachments[0].src", is("data:image/png;base64,b25l")));
+	        .andExpect(jsonPath("$[0].attachments[0].key", is("keyone")))
+	        .andExpect(jsonPath("$[0].attachments[0].url", is("https://s3-us-west-2.amazonaws.com/imageconsumer/keyone")));
 //	        .andDo(org.springframework.test.web.servlet.result.MockMvcResultHandlers.print());
     }
+
 
 }
