@@ -47,9 +47,4 @@ public class AttachmentServiceLocalImpl implements AttachmentService {
 		return Stream.empty();
 	}
 
-	@Override
-	public String getUrlFor(String key) {
-		return "";
-	}
-
 }

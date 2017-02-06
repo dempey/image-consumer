@@ -5,8 +5,9 @@ import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
+import java.io.ByteArrayInputStream;
 import java.util.Collections;
 
 import org.junit.Test;
@@ -20,6 +21,7 @@ import org.springframework.test.web.servlet.MockMvc;
 
 import com.stg.imageconsumer.domain.attachment.Attachment;
 import com.stg.imageconsumer.domain.attachment.AttachmentService;
+import com.stg.imageconsumer.domain.attachment.KeyedFile;
 import com.stg.imageconsumer.domain.email.Email;
 import com.stg.imageconsumer.domain.email.EmailService;
 
@@ -38,7 +40,7 @@ public class ImageConsumerRestControllerTest {
 	private AttachmentService attachmentService;
 
     @Test
-    public void getAllEmailsTest() throws Exception {
+    public void testGetAllEmails() throws Exception {
     	Email email = new Email();
     	email.setId("test email");
     	email.setFrom("test@test.com");
@@ -48,14 +50,21 @@ public class ImageConsumerRestControllerTest {
     	attachment.setKey("keyone");
 		email.addAttachment(attachment);
     	when(emailService.getAll()).thenReturn(Collections.singletonList(email));
-    	when(attachmentService.getUrlFor(eq("keyone"))).thenReturn("https://s3-us-west-2.amazonaws.com/imageconsumer/keyone");
         mockMvc.perform(get("/email"))
 	        .andExpect(status().isOk())
 	        .andExpect(jsonPath("$[0].subject", is("hello there")))
 	        .andExpect(jsonPath("$[0].attachments[0].key", is("keyone")))
-	        .andExpect(jsonPath("$[0].attachments[0].url", is("https://s3-us-west-2.amazonaws.com/imageconsumer/keyone")));
+	        .andExpect(jsonPath("$[0].attachments[0].url", is("http://localhost/s3/keyone")));
 //	        .andDo(org.springframework.test.web.servlet.result.MockMvcResultHandlers.print());
     }
 
-
+    @Test
+    public void testGetS3() throws Exception {
+    	byte[] bytes = "One".getBytes();
+    	when(attachmentService.getFile(eq("one"))).thenReturn(new KeyedFile("one", new ByteArrayInputStream(bytes)));
+    	mockMvc.perform(get("/s3/one"))
+    		.andExpect(status().isOk())
+    		.andExpect(content().bytes(bytes));
+//    		.andDo(org.springframework.test.web.servlet.result.MockMvcResultHandlers.print());
+    }
 }

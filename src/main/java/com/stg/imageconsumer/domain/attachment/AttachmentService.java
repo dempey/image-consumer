@@ -8,12 +8,10 @@ public interface AttachmentService {
 	
 	void updateAttachments(Collection<Attachment> attachments);
 
-	KeyedFile getFile(String id);
+	KeyedFile getFile(String key);
 
 	Supplier<? extends String> saveAndGetKey(Attachment attachment);
 
 	Stream<Attachment> findSimilarAttachments(Attachment attachment);
-
-	String getUrlFor(String key);
 	
 }

@@ -76,11 +76,6 @@ public class AttachmentServiceS3Impl implements AttachmentService {
 	public void updateAttachments(Collection<Attachment> attachments) {
 		attachmentRepository.save(attachments);
 	}
-
-	@Override
-	public String getUrlFor(String key) {
-		return String.format("https://s3-us-west-2.amazonaws.com/%s/%s", AmazonConfiguration.BUCKET, key);
-	}
 	
 	@Repository
 	public interface AttachmentRepository extends CrudRepository<Attachment, String> {
