@@ -35,19 +35,19 @@ public class ImageConsumerRestController {
     	this.attachmentService = attachmentService;
     }
 
-    @RequestMapping(path = "/email", method = RequestMethod.GET)
+    @RequestMapping(path = "/emails", method = RequestMethod.GET)
     public List<Email> getEmailData(UriComponentsBuilder uriBuilder) throws IOException {
         logger.debug("Beginning call to get email data");
         List<Email> emails = emailService.getAll();
         emails.forEach(e -> {
         	e.getAttachments().forEach(a -> {
-        		a.setUrl(uriBuilder.path(String.format("/s3/%s", a.getKey())).toUriString());
+        		a.setUrl(uriBuilder.path(String.format("/attachments/%s", a.getKey())).toUriString());
         	});
         });
         return emails;
     }
     
-    @RequestMapping(path = "/s3/{key}", method = RequestMethod.GET)
+    @RequestMapping(path = "/attachments/{key}", method = RequestMethod.GET)
     public StreamingResponseBody getS3(@PathVariable String key) {
     	return new StreamingResponseBody() {
 			@Override
