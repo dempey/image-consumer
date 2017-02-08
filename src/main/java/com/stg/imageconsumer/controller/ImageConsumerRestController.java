@@ -7,10 +7,7 @@ import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.method.annotation.StreamingResponseBody;
 import org.springframework.web.util.UriComponentsBuilder;
 
@@ -35,6 +32,7 @@ public class ImageConsumerRestController {
     	this.attachmentService = attachmentService;
     }
 
+    @CrossOrigin(origins = {"http://s3-us-west-2.amazonaws.com", "http://localhost:8080"})
     @RequestMapping(path = "/emails", method = RequestMethod.GET)
     public List<Email> getEmailData(UriComponentsBuilder uriBuilder) throws IOException {
         logger.debug("Beginning call to get email data");
