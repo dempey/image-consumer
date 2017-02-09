@@ -8,7 +8,7 @@ public interface AttachmentService {
 	
 	void updateAttachments(Collection<Attachment> attachments);
 
-	KeyedFile getFile(String id);
+	KeyedFile getFile(String key);
 
 	Supplier<? extends String> saveAndGetKey(Attachment attachment);
 
