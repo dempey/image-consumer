@@ -39,7 +39,7 @@ public class ImageConsumerRestController {
         List<Email> emails = emailService.getAll();
         emails.forEach(e -> {
         	e.getAttachments().forEach(a -> {
-        		a.setUrl(uriBuilder.path(String.format("/attachments/%s", a.getKey())).toUriString());
+        		a.setUrl(uriBuilder.cloneBuilder().path(String.format("/attachments/%s", a.getKey())).build().toUriString());
         	});
         });
         return emails;
