@@ -50,11 +50,11 @@ public class ImageConsumerRestControllerTest {
     	attachment.setKey("keyone");
 		email.addAttachment(attachment);
     	when(emailService.getAll()).thenReturn(Collections.singletonList(email));
-        mockMvc.perform(get("/email"))
+        mockMvc.perform(get("/emails"))
 	        .andExpect(status().isOk())
 	        .andExpect(jsonPath("$[0].subject", is("hello there")))
 	        .andExpect(jsonPath("$[0].attachments[0].key", is("keyone")))
-	        .andExpect(jsonPath("$[0].attachments[0].url", is("http://localhost/s3/keyone")));
+	        .andExpect(jsonPath("$[0].attachments[0].url", is("http://localhost/attachments/keyone")));
 //	        .andDo(org.springframework.test.web.servlet.result.MockMvcResultHandlers.print());
     }
 
@@ -62,7 +62,7 @@ public class ImageConsumerRestControllerTest {
     public void testGetS3() throws Exception {
     	byte[] bytes = "One".getBytes();
     	when(attachmentService.getFile(eq("one"))).thenReturn(new KeyedFile("one", new ByteArrayInputStream(bytes)));
-    	mockMvc.perform(get("/s3/one"))
+    	mockMvc.perform(get("/attachments/one"))
     		.andExpect(status().isOk())
     		.andExpect(content().bytes(bytes));
 //    		.andDo(org.springframework.test.web.servlet.result.MockMvcResultHandlers.print());

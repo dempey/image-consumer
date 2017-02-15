@@ -32,8 +32,10 @@ public class AmazonConfiguration {
 			@Override
 			public DataSourceFactory getDataSourceFactory() {
 				TomcatJdbcDataSourceFactory dataSourceFactory = new TomcatJdbcDataSourceFactory();
-//				dataSourceFactory.setConnectionProperties("useSSL=false");
+				dataSourceFactory.setConnectionProperties("useSSL=false");
 				dataSourceFactory.setDefaultCatalog("mydb");
+				dataSourceFactory.setTestOnBorrow(true);
+				dataSourceFactory.setValidationQuery("SELECT 1");
 				return dataSourceFactory;
 			}
 			

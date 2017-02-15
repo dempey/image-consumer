@@ -7,10 +7,7 @@ import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.method.annotation.StreamingResponseBody;
 import org.springframework.web.util.UriComponentsBuilder;
 
@@ -35,19 +32,20 @@ public class ImageConsumerRestController {
     	this.attachmentService = attachmentService;
     }
 
-    @RequestMapping(path = "/email", method = RequestMethod.GET)
+    @CrossOrigin(origins = {"http://s3-us-west-2.amazonaws.com", "http://localhost:8080"})
+    @RequestMapping(path = "/emails", method = RequestMethod.GET)
     public List<Email> getEmailData(UriComponentsBuilder uriBuilder) throws IOException {
         logger.debug("Beginning call to get email data");
         List<Email> emails = emailService.getAll();
         emails.forEach(e -> {
         	e.getAttachments().forEach(a -> {
-        		a.setUrl(uriBuilder.path(String.format("/s3/%s", a.getKey())).toUriString());
+        		a.setUrl(uriBuilder.cloneBuilder().path(String.format("/attachments/%s", a.getKey())).build().toUriString());
         	});
         });
         return emails;
     }
     
-    @RequestMapping(path = "/s3/{key}", method = RequestMethod.GET)
+    @RequestMapping(path = "/attachments/{key}", method = RequestMethod.GET)
     public StreamingResponseBody getS3(@PathVariable String key) {
     	return new StreamingResponseBody() {
 			@Override
