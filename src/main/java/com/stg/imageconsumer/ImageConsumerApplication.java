@@ -17,6 +17,7 @@ import com.stg.imageconsumer.local.DatabaseConfiguration;
 
 @SpringBootApplication(scanBasePackages={"com.stg.imageconsumer.domain"}, exclude = ContextStackAutoConfiguration.class)
 @Import({ AmazonConfiguration.class, DatabaseConfiguration.class, IntegrationConfiguration.class, WebConfiguration.class })
+//@Import({ DatabaseConfiguration.class, IntegrationConfiguration.class, WebConfiguration.class })
 public class ImageConsumerApplication {
 
 	private static final Logger logger = LoggerFactory.getLogger(ImageConsumerApplication.class);

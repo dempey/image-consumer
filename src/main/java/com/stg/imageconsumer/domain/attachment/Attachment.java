@@ -44,7 +44,10 @@ public class Attachment implements Persistable<String>, Serializable {
 	
 	@Column(name="length")
 	private int length;
-	
+
+	@Column(name="image")
+	private byte[] image;
+
 	@Column(name="s3_key")
 	private String key;
 	
@@ -58,10 +61,11 @@ public class Attachment implements Persistable<String>, Serializable {
 	public Attachment() {
 	}
 	
-	public Attachment(String filename, byte[] data) {
+	public Attachment(String filename, byte[] image) {
 		this.filename = filename;
-		this.data = data;
-		this.length = data.length;
+		this.data = image;
+		this.length = image.length;
+		this.image = image;
 		this.md5 = DigestUtils.md5Digest(data);
 	}
 
@@ -92,11 +96,19 @@ public class Attachment implements Persistable<String>, Serializable {
 	public byte[] getMd5() {
 		return md5;
 	}
-	
+
 	public void setMd5(byte[] md5) {
 		this.md5 = md5;
 	}
-	
+
+	public byte[] getImage() {
+		return image;
+	}
+
+	public void setImage(byte[] image) {
+		this.image = image;
+	}
+
 	public String getFilename() {
 		return filename;
 	}
@@ -121,13 +133,13 @@ public class Attachment implements Persistable<String>, Serializable {
 		this.key = key;
 	}
 
-	public String getUrl() {
-		return url;
-	}
+//	public String getUrl() {
+//		return url;
+//	}
 
-	public void setUrl(String url) {
-		this.url = url;
-	}
+//	public void setUrl(String url) {
+//		this.url = url;
+//	}
 
 	@Override
 	public int hashCode() {

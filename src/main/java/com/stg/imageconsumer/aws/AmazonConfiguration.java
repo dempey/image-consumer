@@ -15,11 +15,11 @@ import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 
 @Configuration
 @Profile("prod")
-@EnableRdsInstance(dbInstanceIdentifier="imageconsumer", password="STGrocks!", username="root")
+//@EnableRdsInstance(dbInstanceIdentifier="imageconsumer", password="STGrocks!", username="root")
 @EnableJpaRepositories(considerNestedRepositories=true)
-@EnableContextRegion(region="us-west-2")
-@EnableContextCredentials
-@EnableContextResourceLoader
+//@EnableContextRegion(region="us-west-2")
+//@EnableContextCredentials
+//@EnableContextResourceLoader
 @ComponentScan
 public class AmazonConfiguration {
 	
@@ -41,31 +41,4 @@ public class AmazonConfiguration {
 			
 		};
 	}
-
-//	@Bean
-//	public DataSource dataSource() {
-//		logger.debug("RDS dataSource");
-//		DriverManagerDataSource dataSource = new DriverManagerDataSource();
-//		dataSource.setDriverClassName("com.mysql.jdbc.Driver");
-//		dataSource.setUrl("jdbc:mysql://imageconsumer.crj31z9rwl7x.us-west-2.rds.amazonaws.com:3306/mydb?useSSL=false");
-//		dataSource.setUsername("root");
-//		dataSource.setPassword("STGrocks!");
-//		return dataSource;
-//	}
-//	
-//	@Bean
-//	public EntityManagerFactory entityManagerFactory() {
-//		HibernateJpaVendorAdapter adapter = new HibernateJpaVendorAdapter();
-//		adapter.setShowSql(false);
-//		adapter.setDatabasePlatform("org.hibernate.dialect.MySQL5Dialect");
-//
-//		LocalContainerEntityManagerFactoryBean factory = new LocalContainerEntityManagerFactoryBean();
-//		factory.setDataSource(dataSource());
-//		factory.setPackagesToScan("com.stg.imageconsumer.domain", "com.stg.imageconsumer.aws");
-//		factory.setJpaVendorAdapter(adapter);
-//		factory.setJpaPropertyMap(DatabaseConfiguration.jpaProperties());
-//
-//		factory.afterPropertiesSet();
-//		return factory.getObject();
-//	}
 }

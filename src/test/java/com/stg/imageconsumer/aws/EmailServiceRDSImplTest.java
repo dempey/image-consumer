@@ -38,7 +38,7 @@ public class EmailServiceRDSImplTest {
 		email.setTo("bob@bob.com");
 		email.setFrom("george@bob.com");
 		email.setSubject("test");
-		email.setBody("body");
+		email.setBody("body".getBytes());
 		email.setSentDate(new Date());
 		email.setReceivedDate(new Date());
 		email.addAttachment(new Attachment("one", "one".getBytes()));

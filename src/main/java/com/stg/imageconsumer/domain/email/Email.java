@@ -36,8 +36,8 @@ public class Email implements Persistable<String>, Serializable {
 	private String bccAddresses;
 	
 	@Column(name="body")
-	@Lob
-	private String body;
+	//@Lob
+	private byte[] body;
 	
 	@Column(name="cc_addresses")
 	private String ccAddresses;
@@ -81,7 +81,7 @@ public class Email implements Persistable<String>, Serializable {
 		return bccAddresses;
 	}
 
-	public String getBody() {
+	public byte[] /*String*/ getBody() {
 		return body;
 	}
 
@@ -113,7 +113,7 @@ public class Email implements Persistable<String>, Serializable {
 		this.bccAddresses = bcc;
 	}
 
-	public void setBody(String body) {
+	public void setBody(byte[] /*String*/ body) {
 		this.body = body;
 	}
 

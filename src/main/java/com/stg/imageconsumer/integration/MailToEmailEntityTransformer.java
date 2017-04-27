@@ -54,13 +54,13 @@ public class MailToEmailEntityTransformer extends AbstractMailMessageTransformer
 		entity.setSubject(mailMessage.getSubject());
 		Object content = mailMessage.getContent();
 		if (content instanceof String) {
-			entity.setBody((String) mailMessage.getContent());
+			entity.setBody( (byte[]) /*(String)*/ mailMessage.getContent());
 		} else if (content instanceof Multipart) {
 			handleMultipart((Multipart) content, entity);
 		} else if (content instanceof Part) {
 			ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
 			((Part) content).writeTo(outputStream);
-			entity.setBody((new String(outputStream.toByteArray(), this.charset)).trim());
+			entity.setBody(((new String(outputStream.toByteArray(), this.charset)).trim()).getBytes());
 		}
 		return this.getMessageBuilderFactory().withPayload(entity);
 	}
@@ -74,7 +74,7 @@ public class MailToEmailEntityTransformer extends AbstractMailMessageTransformer
 				if(Part.ATTACHMENT.equalsIgnoreCase(bodyPart.getDisposition())) {
 					email.addAttachment(new Attachment(bodyPart.getFileName(), stringContent.getBytes()));
 				} else if(!email.hasBody()) {
-					email.setBody(stringContent);
+					email.setBody(stringContent.getBytes());
 				} else {
 					System.out.println("new string " + stringContent);
 				}

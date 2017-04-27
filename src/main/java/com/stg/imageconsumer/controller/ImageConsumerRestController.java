@@ -37,11 +37,11 @@ public class ImageConsumerRestController {
     public List<Email> getEmailData(UriComponentsBuilder uriBuilder) throws IOException {
         logger.debug("Beginning call to get email data");
         List<Email> emails = emailService.getAll();
-        emails.forEach(e -> {
-        	e.getAttachments().forEach(a -> {
-        		a.setUrl(uriBuilder.cloneBuilder().path(String.format("/attachments/%s", a.getKey())).build().toUriString());
-        	});
-        });
+//        emails.forEach(e -> {
+//        	e.getAttachments().forEach(a -> {
+//        		a.setUrl(uriBuilder.cloneBuilder().path(String.format("/attachments/%s", a.getKey())).build().toUriString());
+//        	});
+//        });
         return emails;
     }
     
