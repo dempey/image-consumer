@@ -16,6 +16,8 @@ import org.hibernate.annotations.GenericGenerator;
 import org.springframework.data.domain.Persistable;
 import org.springframework.util.DigestUtils;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.stg.imageconsumer.domain.email.Email;
 
 @Entity
@@ -31,6 +33,7 @@ public class Attachment implements Persistable<String>, Serializable {
 	
 	@ManyToOne
 	@JoinColumn(name="email_id")
+	@JsonBackReference
 	private Email email;
 	
 	@Column(name="md5")
@@ -41,20 +44,28 @@ public class Attachment implements Persistable<String>, Serializable {
 	
 	@Column(name="length")
 	private int length;
-	
+
+	@Column(name="image")
+	private byte[] image;
+
 	@Column(name="s3_key")
 	private String key;
 	
 	@Transient
+	@JsonIgnore
 	private byte[] data;
+	
+	@Transient
+	private String url;
 	
 	public Attachment() {
 	}
 	
-	public Attachment(String filename, byte[] data) {
+	public Attachment(String filename, byte[] image) {
 		this.filename = filename;
-		this.data = data;
-		this.length = data.length;
+		this.data = image;
+		this.length = image.length;
+		this.image = image;
 		this.md5 = DigestUtils.md5Digest(data);
 	}
 
@@ -85,11 +96,19 @@ public class Attachment implements Persistable<String>, Serializable {
 	public byte[] getMd5() {
 		return md5;
 	}
-	
+
 	public void setMd5(byte[] md5) {
 		this.md5 = md5;
 	}
-	
+
+	public byte[] getImage() {
+		return image;
+	}
+
+	public void setImage(byte[] image) {
+		this.image = image;
+	}
+
 	public String getFilename() {
 		return filename;
 	}
@@ -113,6 +132,14 @@ public class Attachment implements Persistable<String>, Serializable {
 	public void setKey(String key) {
 		this.key = key;
 	}
+
+//	public String getUrl() {
+//		return url;
+//	}
+
+//	public void setUrl(String url) {
+//		this.url = url;
+//	}
 
 	@Override
 	public int hashCode() {

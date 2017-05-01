@@ -44,11 +44,11 @@ public class AttachmentServiceS3Impl implements AttachmentService {
 	}
 
 	@Override
-	public KeyedFile getFile(String id) {
+	public KeyedFile getFile(String key) {
 		try {
-			return new KeyedFile(id, getResource(id).getInputStream());
+			return new KeyedFile(key, getResource(key).getInputStream());
 		} catch (IOException e) {
-			logger.error("Error opening the file " + id, e);
+			logger.error("Error opening the file " + key, e);
 		}
 		return null;
 	}

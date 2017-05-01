@@ -95,11 +95,12 @@ public class Integrations {
 
 	@Transformer(inputChannel = SAVE_ATTACHMENTS, outputChannel = UPDATE_ATTACHMENTS)
 	public Set<Attachment> saveAttachmentsTransformer(Set<Attachment> attachments) {
-		logger.debug("saving attachments");
-		Set<Attachment> savedAttachments = attachments.stream().map(getOrCreateKeyTransformer::doTransform)
-				.collect(Collectors.toSet());
-		logger.debug("{} attachments saved", savedAttachments.size());
-		return savedAttachments;
+//		logger.debug("saving attachments");
+//		Set<Attachment> savedAttachments = attachments.stream().map(getOrCreateKeyTransformer::doTransform)
+//				.collect(Collectors.toSet());
+//		logger.debug("{} attachments saved", savedAttachments.size());
+//		return savedAttachments;
+		return attachments;
 	}
 
 	@ServiceActivator(inputChannel = UPDATE_ATTACHMENTS)

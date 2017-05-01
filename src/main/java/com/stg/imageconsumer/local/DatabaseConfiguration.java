@@ -34,21 +34,24 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 @EnableTransactionManagement
 @ComponentScan
 public class DatabaseConfiguration {
-	
+
+	private static final String USER = System.getenv("DB_USERNAME");
+	private static final String PASSWORD = System.getenv("DB_PASSWORD");
+
 	protected Logger logger = LoggerFactory.getLogger(DatabaseConfiguration.class);
 	
 	@Configuration
-	@ConditionalOnClass(name="com.mysql.jdbc.Driver")
+	@ConditionalOnClass(name="org.postgresql.Driver")
 	@Profile("dev")
 	public class MySQLDatabaseConfiguration {
 		@Bean
 		public DataSource dataSource() {
 			logger.debug("MySQLDatabaseConfiguration dataSource");
 			DriverManagerDataSource dataSource = new DriverManagerDataSource();
-			dataSource.setDriverClassName("com.mysql.jdbc.Driver");
-			dataSource.setUrl("jdbc:mysql://localhost:3306/imageconsumer?useSSL=false");
-			dataSource.setUsername("root");
-			dataSource.setPassword("password");
+			dataSource.setDriverClassName("org.postgresql.Driver");
+			dataSource.setUrl("jdbc:postgresql://ec2-23-21-227-73.compute-1.amazonaws.com:5432/d2th8fddh1b6p4?sslmode=require");
+			dataSource.setUsername(USER);
+			dataSource.setPassword(PASSWORD);
 			return dataSource;
 		}
 	
@@ -56,8 +59,8 @@ public class DatabaseConfiguration {
 		public EntityManagerFactory entityManagerFactory() {
 			HibernateJpaVendorAdapter adapter = new HibernateJpaVendorAdapter();
 			adapter.setShowSql(false);
-			adapter.setDatabasePlatform("org.hibernate.dialect.MySQL5Dialect");
-	
+			adapter.setDatabasePlatform("org.hibernate.dialect.PostgreSQLDialect");
+
 			LocalContainerEntityManagerFactoryBean factory = new LocalContainerEntityManagerFactoryBean();
 			factory.setDataSource(dataSource());
 			factory.setPackagesToScan("com.stg.imageconsumer.domain", "com.stg.imageconsumer.local");

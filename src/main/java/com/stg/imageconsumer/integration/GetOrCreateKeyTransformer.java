@@ -40,7 +40,7 @@ public class GetOrCreateKeyTransformer implements Transformer {
 		Attachment attachment = (Attachment) payload;
 		AbstractIntegrationMessageBuilder<Attachment> builder = null;
 		try {
-			builder = IntegrationUtils.getMessageBuilderFactory(null).withPayload(doTransform(attachment));
+			builder = IntegrationUtils.getMessageBuilderFactory(null).withPayload(attachment);
 		} catch (Exception e) {
 			throw new MessageTransformationException(message, "failed to transform mail message", e);
 		}
@@ -52,25 +52,25 @@ public class GetOrCreateKeyTransformer implements Transformer {
 	}
 
 	public Attachment doTransform(Attachment attachment) {
-		try {
-			String key = attachmentService.findSimilarAttachments(attachment)
-					.map(Attachment::getKey)
-					.filter(k -> k != null).map(id -> attachmentService.getFile(id)).filter(kf -> {
-						try {
-							return IOUtils.contentEquals(kf.getInputStream(),
-									new ByteArrayInputStream(attachment.getData()));
-						} catch (IOException e) {
-							logger.error("problem comparing files", e);
-						}
-						return false;
-					}).findAny()
-					.map(KeyedFile::getKey)
-					.orElseGet(attachmentService.saveAndGetKey(attachment));
-			logger.debug("saved key {}", key);
-			attachment.setKey(key);
-		} catch (Exception e) {
-			logger.error("Error saving attachment " + attachment.getId(), e);
-		}
+//		try {
+//			String key = attachmentService.findSimilarAttachments(attachment)
+//					.map(Attachment::getKey)
+//					.filter(k -> k != null).map(id -> attachmentService.getFile(id)).filter(kf -> {
+//						try {
+//							return IOUtils.contentEquals(kf.getInputStream(),
+//									new ByteArrayInputStream(attachment.getData()));
+//						} catch (IOException e) {
+//							logger.error("problem comparing files", e);
+//						}
+//						return false;
+//					}).findAny()
+//					.map(KeyedFile::getKey)
+//					.orElseGet(attachmentService.saveAndGetKey(attachment));
+//			logger.debug("saved key {}", key);
+//			attachment.setKey(key);
+//		} catch (Exception e) {
+//			logger.error("Error saving attachment " + attachment.getId(), e);
+//		}
 		return attachment;
 	}
 
