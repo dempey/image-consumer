@@ -97,6 +97,12 @@
 			<version>9.4.1212</version>
 		</dependency>
 
+		<dependency>
+			<groupId>org.slf4j</groupId>
+			<artifactId>log4j-over-slf4j</artifactId>
+			<version>1.8.0-alpha2</version>
+		</dependency>
+
 	</dependencies>
 
 	<dependencyManagement>
