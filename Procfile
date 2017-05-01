@@ -6,4 +6,4 @@
 #########
 ## This line will run in Heroku production environment
 #########
-web: java $JAVA_OPTS -jar target/*.jar
+web: java $JAVA_OPTS $PORT -jar target/*.jar
