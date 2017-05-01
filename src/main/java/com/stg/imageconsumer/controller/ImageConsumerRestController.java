@@ -32,7 +32,7 @@ public class ImageConsumerRestController {
     	this.attachmentService = attachmentService;
     }
 
-//    @CrossOrigin(origins = {"http://s3-us-west-2.amazonaws.com", "http://localhost:8080"})
+    @CrossOrigin(origins = {"https://image-consumer.herokuapp.com", "http://localhost:8080"})
     @RequestMapping(path = "/emails", method = RequestMethod.GET)
     public List<Email> getEmailData(UriComponentsBuilder uriBuilder) throws IOException {
         logger.debug("Beginning call to get email data");
