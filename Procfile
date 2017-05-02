@@ -6,4 +6,4 @@
 #########
 ## This line will run in Heroku production environment
 #########
-web: java -cp target/classes/:target/dependency/* com.stg.imageconsumer.ImageConsumerApplication
+web: java -cp target/classes/;target/lib/* com.stg.imageconsumer.ImageConsumerApplication
