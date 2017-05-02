@@ -1,9 +1,9 @@
 package com.stg.imageconsumer;
 
 import java.io.IOException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.cloud.aws.autoconfigure.context.ContextStackAutoConfiguration;
@@ -20,11 +20,11 @@ import com.stg.imageconsumer.local.DatabaseConfiguration;
 //@Import({ DatabaseConfiguration.class, IntegrationConfiguration.class, WebConfiguration.class })
 public class ImageConsumerApplication {
 
-	private static final Logger logger = LoggerFactory.getLogger(ImageConsumerApplication.class);
+	private static final Logger logger = Logger.getLogger(ImageConsumerApplication.class.getName());
 
 	public static void main(String[] args) throws IOException {
 		ConfigurableApplicationContext ctx = SpringApplication.run(ImageConsumerApplication.class, args);
-		logger.debug("started");
+		logger.log(Level.FINE, "started");
 		System.out.println("Hit Enter to terminate");
 		System.in.read();
 		ctx.close();
