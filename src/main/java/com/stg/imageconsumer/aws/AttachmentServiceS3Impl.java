@@ -7,11 +7,11 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.util.Collection;
 import java.util.function.Supplier;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import java.util.stream.Stream;
 
 import org.apache.commons.io.IOUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.ResourceLoader;
@@ -27,7 +27,7 @@ import com.stg.imageconsumer.domain.attachment.KeyedFile;
 @Service
 public class AttachmentServiceS3Impl implements AttachmentService {
 	
-	private static final Logger logger = LoggerFactory.getLogger(AttachmentService.class);
+	private static final Logger logger = Logger.getLogger(AttachmentService.class.getName());
 	
 	AttachmentRepository attachmentRepository;
 	
@@ -48,7 +48,7 @@ public class AttachmentServiceS3Impl implements AttachmentService {
 		try {
 			return new KeyedFile(key, getResource(key).getInputStream());
 		} catch (IOException e) {
-			logger.error("Error opening the file " + key, e);
+			logger.log(Level.SEVERE,"Error opening the file " + key, e);
 		}
 		return null;
 	}
@@ -56,12 +56,12 @@ public class AttachmentServiceS3Impl implements AttachmentService {
 	@Override
 	public Supplier<? extends String> saveAndGetKey(Attachment attachment) {
 		return () -> {
-			logger.debug("trying to write file to s3");
+			logger.log(Level.FINE, "trying to write file to s3");
 			WritableResource resource = (WritableResource) getResource(attachment.getId());
 			try (OutputStream output = resource.getOutputStream()) {
 				IOUtils.copy(new ByteArrayInputStream(attachment.getData()), output);
 			} catch (IOException e) {
-				logger.error("Error saving the file " + attachment.getId(), e);
+				logger.log(Level.SEVERE, "Error saving the file " + attachment.getId(), e);
 			}
 			return attachment.getId();
 		};

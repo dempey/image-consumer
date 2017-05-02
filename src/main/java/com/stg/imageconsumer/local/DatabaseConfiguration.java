@@ -3,6 +3,8 @@ package com.stg.imageconsumer.local;
 import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import javax.persistence.EntityManagerFactory;
 import javax.sql.DataSource;
@@ -10,8 +12,6 @@ import javax.sql.DataSource;
 import org.hibernate.boot.model.naming.Identifier;
 import org.hibernate.boot.model.naming.PhysicalNamingStrategyStandardImpl;
 import org.hibernate.engine.jdbc.env.spi.JdbcEnvironment;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.boot.orm.jpa.EntityManagerFactoryBuilder;
@@ -38,7 +38,7 @@ public class DatabaseConfiguration {
 	private static final String USER = System.getenv("DB_USERNAME");
 	private static final String PASSWORD = System.getenv("DB_PASSWORD");
 
-	protected Logger logger = LoggerFactory.getLogger(DatabaseConfiguration.class);
+	protected Logger logger = Logger.getLogger(DatabaseConfiguration.class.getName());
 	
 	@Configuration
 	@ConditionalOnClass(name="org.postgresql.Driver")
@@ -46,7 +46,7 @@ public class DatabaseConfiguration {
 	public class MySQLDatabaseConfiguration {
 		@Bean
 		public DataSource dataSource() {
-			logger.debug("MySQLDatabaseConfiguration dataSource");
+			logger.log(Level.FINE, "MySQLDatabaseConfiguration dataSource");
 			DriverManagerDataSource dataSource = new DriverManagerDataSource();
 			dataSource.setDriverClassName("org.postgresql.Driver");
 			dataSource.setUrl("jdbc:postgresql://ec2-23-21-227-73.compute-1.amazonaws.com:5432/d2th8fddh1b6p4?sslmode=require");
@@ -78,7 +78,7 @@ public class DatabaseConfiguration {
 	public class EmbeddedDatabaseConfiguration {
 		@Bean
 		public DataSource dataSource() {
-			logger.debug("EmbeddedDatabaseConfiguration dataSource");
+			logger.log(Level.FINE, "EmbeddedDatabaseConfiguration dataSource");
 			EmbeddedDatabaseBuilder builder = new EmbeddedDatabaseBuilder();
 			return builder.setType(EmbeddedDatabaseType.H2)
 					.addScript("/db/set_mode.sql")
