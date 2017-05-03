@@ -2,9 +2,10 @@ package com.stg.imageconsumer.integration;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
-import java.util.logging.Logger;
 
 import org.apache.commons.io.IOUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.integration.support.AbstractIntegrationMessageBuilder;
 import org.springframework.integration.support.utils.IntegrationUtils;
@@ -20,7 +21,7 @@ import com.stg.imageconsumer.domain.attachment.KeyedFile;
 @Component
 public class GetOrCreateKeyTransformer implements Transformer {
 
-	private static final Logger logger = Logger.getLogger(GetOrCreateKeyTransformer.class.getName());
+	private static final Logger logger = LoggerFactory.getLogger(GetOrCreateKeyTransformer.class.getName());
 
 	private AttachmentService attachmentService;
 

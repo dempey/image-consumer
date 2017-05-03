@@ -3,9 +3,9 @@ package com.stg.imageconsumer.controller;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.method.annotation.StreamingResponseBody;
@@ -20,7 +20,7 @@ import com.stg.imageconsumer.domain.email.EmailService;
 @RestController
 public class ImageConsumerRestController {
 
-    private static final Logger logger = Logger.getLogger(ImageConsumerRestController.class.getName());
+    private static final Logger logger = LoggerFactory.getLogger(ImageConsumerRestController.class.getName());
     
     private EmailService emailService;
     
@@ -35,7 +35,7 @@ public class ImageConsumerRestController {
     @CrossOrigin(origins = {"https://image-consumer.herokuapp.com", "http://localhost:8080"})
     @RequestMapping(path = "/emails", method = RequestMethod.GET)
     public List<Email> getEmailData(UriComponentsBuilder uriBuilder) throws IOException {
-        logger.log(Level.FINE, "Beginning call to get email data");
+        logger.debug("Beginning call to get email data");
         List<Email> emails = emailService.getAll();
 //        emails.forEach(e -> {
 //        	e.getAttachments().forEach(a -> {
