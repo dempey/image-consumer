@@ -1,10 +1,10 @@
 package com.stg.imageconsumer.integration;
 
 import java.util.Set;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import java.util.stream.Collectors;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.integration.annotation.ServiceActivator;
@@ -29,7 +29,7 @@ public class Integrations {
 	public static final String SAVE_ATTACHMENTS = "saveAttachments";
 	public static final String UPDATE_ATTACHMENTS = "updateAttachments";
 
-	private static final Logger logger = Logger.getLogger(Integrations.class.getName());
+	private static final Logger logger = LoggerFactory.getLogger(Integrations.class.getName());
 
 	private MailToEmailEntityTransformer mailToEmailEntityTransformer;
 
@@ -82,9 +82,9 @@ public class Integrations {
 
 	@Transformer(inputChannel = SAVE_ENTITY, outputChannel = GET_ATTACHMENTS)
 	public Email saveEmailInformation(Email email) {
-		logger.log(Level.FINE, "attempting to save email");
+		logger.debug("attempting to save email");
 		Email saved = emailService.save(email);
-		logger.log(Level.FINE, String.format("saved email %s", saved.getId()));
+		logger.debug(String.format("saved email %s", saved.getId()));
 		return saved;
 	}
 
